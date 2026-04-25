@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DopaBeauty | نظام الإحالات</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #ff85a2; --bg: #fcfcfc; }
+        body { background: var(--bg); font-family: 'Tajawal', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); width: 100%; max-width: 400px; text-align: center; }
+        h1 { color: var(--primary); font-weight: 900; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        button:hover { opacity: 0.9; }
+        #result { display: none; margin-top: 20px; padding: 20px; border: 2px dashed #48bb78; border-radius: 10px; background: #f0fff4; }
+        .code { font-size: 24px; font-weight: 900; color: #2f855a; display: block; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>DOPA BEAUTY</h1>
+        <p>سجل للحصول على كود الإحالة الخاص بك</p>
+        <form id="regForm">
+            <input type="text" id="name" placeholder="الاسم الكامل" required>
+            <input type="email" id="email" placeholder="البريد الإلكتروني" required>
+            <input type="tel" id="phone" placeholder="رقم الواتساب" required>
+            <button type="submit">إنشاء كود الدعوة</button>
+        </form>
+        <div id="result">
+            <p>كودك الخاص للربح هو:</p>
+            <span class="code" id="userCode"></span>
+            <p style="font-size: 12px;">شارك هذا الكود مع المستثمرين الجدد.</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('regForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const n = document.getElementById('name').value;
+            const code = "DOPA-" + n.substring(0,3).toUpperCase() + "-" + Math.floor(1000 + Math.random() * 9000);
+            
+            document.getElementById('regForm').style.display = 'none';
+            document.getElementById('result').style.display = 'block';
+            document.getElementById('userCode').innerText = code;
+
+            // الربط مع Google Forms الخاص بك
+            const url = "https://docs.google.com/forms/d/e/1FAIpQLSfsShGBXITmBWynsNVrG9VM68lztG9GOsfAMsbFMdKa0U0FlQ/formResponse";
+            const d = new URLSearchParams();
+            d.append('entry.1954971449', n);
+            d.append('entry.2124666075', document.getElementById('email').value);
+            d.append('entry.1410046301', document.getElementById('phone').value);
+            d.append('entry.1652417255', code);
+            fetch(url, { method: 'POST', mode: 'no-cors', body: d });
+        });
+    </script>
+</body>
+</html>
