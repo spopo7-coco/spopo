@@ -3,56 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DopaBeauty | نظام الإحالات</title>
+    <title>DopaBeauty | نظام الإحالات والاستثمار</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #ff85a2; --bg: #fcfcfc; }
-        body { background: var(--bg); font-family: 'Tajawal', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); width: 100%; max-width: 400px; text-align: center; }
-        h1 { color: var(--primary); font-weight: 900; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
-        button { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.3s; }
-        button:hover { opacity: 0.9; }
-        #result { display: none; margin-top: 20px; padding: 20px; border: 2px dashed #48bb78; border-radius: 10px; background: #f0fff4; }
-        .code { font-size: 24px; font-weight: 900; color: #2f855a; display: block; margin: 10px 0; }
+        :root {
+            --primary: #ff85a2;
+            --bg: #fcfcfc;
+            --text: #333;
+        }
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Tajawal', sans-serif;
+            margin: 0; padding: 0;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 90%; max-width: 500px;
+            background: white; padding: 40px;
+            border-radius: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        h1 { color: var(--primary); font-weight: 900; margin-bottom: 10px; }
+        p { color: #666; margin-bottom: 30px; line-height: 1.6; }
+        input {
+            width: 100%; padding: 15px; margin-bottom: 15px;
+            border: 1px solid #ddd; border-radius: 12px;
+            box-sizing: border-box; font-size: 16px; font-family: inherit;
+        }
+        input:focus { border-color: var(--primary); outline: none; }
+        button {
+            width: 100%; padding: 18px;
+            background: var(--primary); color: white;
+            border: none; border-radius: 12px;
+            font-weight: 700; cursor: pointer; transition: 0.3s; font-size: 18px;
+        }
+        button:hover { background: #ff6b8e; transform: scale(1.02); }
+        
+        #result {
+            display: none; margin-top: 30px;
+            padding: 20px; border: 2px dashed #48bb78;
+            border-radius: 15px; background: #f0fff4;
+        }
+        .code-text {
+            font-size: 28px; font-weight: 900; color: #2e7d32;
+            display: block; margin: 15px 0; letter-spacing: 2px;
+        }
+        .loader { display: none; margin: 10px auto; border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
-    <div class="card">
+
+    <div class="container">
         <h1>DOPA BEAUTY</h1>
-        <p>سجل للحصول على كود الإحالة الخاص بك</p>
+        <p>انضم إلينا الآن! سجل بياناتك واحصل على كود إحالة فريد لبدء جني الأرباح من كل مستثمر جديد.</p>
+        
         <form id="regForm">
-            <input type="text" id="name" placeholder="الاسم الكامل" required>
-            <input type="email" id="email" placeholder="البريد الإلكتروني" required>
-            <input type="tel" id="phone" placeholder="رقم الواتساب" required>
-            <button type="submit">إنشاء كود الدعوة</button>
+            <input type="text" id="userName" placeholder="الاسم الكامل" required>
+            <input type="email" id="userEmail" placeholder="البريد الإلكتروني" required>
+            <input type="tel" id="userPhone" placeholder="رقم الواتساب" required>
+            <input type="text" id="userCity" placeholder="المدينة" required>
+            <button type="submit" id="submitBtn">توليد كود الإحالة</button>
+            <div class="loader" id="loader"></div>
         </form>
+
         <div id="result">
-            <p>كودك الخاص للربح هو:</p>
-            <span class="code" id="userCode"></span>
-            <p style="font-size: 12px;">شارك هذا الكود مع المستثمرين الجدد.</p>
+            <h3 style="color:#2f855a; margin-top:0;">تهانينا! كودك جاهز:</h3>
+            <span class="code-text" id="inviteCode">---</span>
+            <p style="font-size: 14px; margin-bottom:0;">انسخ الكود وشاركه مع الآخرين. سيتم احتساب العمولات بناءً على هذا الكود.</p>
         </div>
     </div>
 
     <script>
         document.getElementById('regForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const n = document.getElementById('name').value;
-            const code = "DOPA-" + n.substring(0,3).toUpperCase() + "-" + Math.floor(1000 + Math.random() * 9000);
             
-            document.getElementById('regForm').style.display = 'none';
-            document.getElementById('result').style.display = 'block';
-            document.getElementById('userCode').innerText = code;
+            const btn = document.getElementById('submitBtn');
+            const loader = document.getElementById('loader');
+            btn.style.display = 'none';
+            loader.style.display = 'block';
 
-            // الربط مع Google Forms الخاص بك
-            const url = "https://docs.google.com/forms/d/e/1FAIpQLSfsShGBXITmBWynsNVrG9VM68lztG9GOsfAMsbFMdKa0U0FlQ/formResponse";
-            const d = new URLSearchParams();
-            d.append('entry.1954971449', n);
-            d.append('entry.2124666075', document.getElementById('email').value);
-            d.append('entry.1410046301', document.getElementById('phone').value);
-            d.append('entry.1652417255', code);
-            fetch(url, { method: 'POST', mode: 'no-cors', body: d });
-        });
-    </script>
-</body>
-</html>
+            // بيانات المستخدم
+            const name = document.getElementById('userName').value;
+            const email = document.getElementById('userEmail').value;
+            const phone = document.getElementById('userPhone').value;
+            const city = document.getElementById('userCity').value;
+
+            // توليد كود فريد (DOPA + أول 3 أحرف من الاسم + رقم عشوائي)
+            const namePart = name.trim().substring(0,3).toUpperCase();
+            const rand = Math.floor(1000 + Math.random() * 9000);
+            const finalCode = "DOPA-" + namePart + "-" + rand;
+
+            // رابط Google Form (تأكد أنه ينتهي بـ formResponse)
+            const formURL = "https://docs.google.com/forms/d/e/1FAIpQLSfsShGBXITmBWynsNVrG9VM68lztG9GOsfAMsbFMdKa0U0FlQ/formResponse";
+            
+            // تجميع البيانات لإرسالها
+            const formData = new URLSearchParams();
+            formData.append('entry.1954971449', name);    // خانة الاسم
+            formData.append('entry.2124666075', email);   // خانة الإيميل
+            formData.append('entry.1410046301', phone);   // خانة الهاتف
+            formData.append('entry.589900374', city);     // خانة المدينة
+            formData.append('entry.1652417255', finalCode); // خانة كود الإحالة
+
+            // إرسال البيانات
+            fetch(formURL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: formData
+            }).then(() => {
+                //
