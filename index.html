@@ -3,38 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NetProfite Pro | Multi-Task Farming</title>
+    <title>NetProfite Pro | التسجيل والربح</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --blue: #0f172a; --gold: #f59e0b; --green: #10b981; --sidebar: #1e293b; }
-        body { background: var(--blue); color: #fff; font-family: 'Cairo', sans-serif; margin: 0; overflow: hidden; }
+        body { background: var(--blue); color: #fff; font-family: 'Cairo', sans-serif; margin: 0; overflow-x: hidden; }
         
         /* شاشة التسجيل */
-        #login-screen { background: radial-gradient(circle, #1e293b 0%, #0f172a 100%); height: 100vh; display: flex; align-items: center; justify-content: center; z-index: 9999; position: relative; }
+        #login-screen { 
+            background: radial-gradient(circle, #1e293b 0%, #0f172a 100%); 
+            height: 100vh; display: flex; align-items: center; justify-content: center; 
+            position: fixed; width: 100%; top: 0; left: 0; z-index: 9999; 
+        }
         .login-card { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); padding: 40px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
         
-        /* اللعبة واللوحة الرئيسية */
-        #main-app { display: none; display: flex; height: 100vh; }
+        /* اللوحة الرئيسية */
+        #main-app { display: none; height: 100vh; width: 100%; }
         
-        /* القائمة الجانبية للمهام */
-        .sidebar { width: 300px; background: var(--sidebar); padding: 20px; overflow-y: auto; border-left: 1px solid rgba(255,255,255,0.1); }
+        /* القائمة الجانبية */
+        .sidebar { width: 300px; background: var(--sidebar); padding: 20px; overflow-y: auto; border-left: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; }
         .task-item { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; margin-bottom: 10px; border-right: 4px solid var(--gold); cursor: pointer; transition: 0.3s; }
-        .task-item:hover { background: rgba(255,255,255,0.1); transform: scale(1.02); }
-        .task-item small { color: var(--gold); font-weight: bold; }
+        .task-item:hover { background: rgba(255,255,255,0.1); }
 
-        /* منطقة التعدين (الوسط) */
-        .game-area { flex-grow: 1; display: flex; flex-direction: column; align-items: center; padding: 20px; position: relative; }
+        /* منطقة التعدين */
+        .game-area { flex-grow: 1; display: flex; flex-direction: column; align-items: center; padding: 20px; }
         .stats-top { width: 100%; display: flex; justify-content: space-around; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; margin-bottom: 20px; }
         
-        canvas { background: #000; border: 3px solid var(--gold); border-radius: 20px; box-shadow: 0 0 50px rgba(245,158,11,0.2); }
+        canvas { background: #000; border: 3px solid var(--gold); border-radius: 20px; cursor: crosshair; }
 
-        /* الأزرار والمدخلات */
         input, select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: none; background: rgba(255,255,255,0.1); color: white; outline: none; }
-        .btn-action { background: var(--gold); color: var(--blue); border: none; padding: 15px; border-radius: 10px; font-weight: 900; cursor: pointer; width: 100%; }
+        .btn-action { background: var(--gold); color: var(--blue); border: none; padding: 15px; border-radius: 10px; font-weight: 900; cursor: pointer; width: 100%; font-size: 18px; }
 
-        /* مودال السحب والرفع */
-        .modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; color: #333; padding: 25px; border-radius: 20px; width: 340px; z-index: 1000; text-align: center; }
-        .file-upload { border: 2px dashed var(--gold); padding: 20px; margin: 15px 0; border-radius: 10px; cursor: pointer; }
+        .modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; color: #333; padding: 25px; border-radius: 20px; width: 340px; z-index: 10000; text-align: center; box-shadow: 0 0 50px rgba(0,0,0,0.5); }
     </style>
 </head>
 <body>
@@ -46,27 +46,19 @@
 <div id="login-screen">
     <div class="login-card">
         <h1 style="color:var(--gold); margin:0;">Net<span>Profite</span></h1>
-        <p>Global Task & Bee Farming</p>
+        <p>ابدأ رحلة التعدين والمهام العالمية</p>
         <form id="regForm" onsubmit="event.preventDefault(); initApp();">
-            <input type="text" placeholder="الاسم الكامل" required>
-            <input type="email" placeholder="البريد الإلكتروني" required>
+            <input type="text" id="u_name" placeholder="الاسم الكامل" required>
+            <input type="email" id="u_email" placeholder="البريد الإلكتروني" required>
             <select id="country-select">
                 <option value="MA" data-curr="MAD">المغرب 🇲🇦</option>
                 <option value="DZ" data-curr="DZD">الجزائر 🇩🇿</option>
-                <option value="TN" data-curr="TND">تونس 🇹🇳</option>
-                <option value="LY" data-curr="LYD">ليبيا 🇱🇾</option>
                 <option value="EG" data-curr="EGP">مصر 🇪🇬</option>
                 <option value="SA" data-curr="SAR">السعودية 🇸🇦</option>
                 <option value="AE" data-curr="AED">الإمارات 🇦🇪</option>
-                <option value="KW" data-curr="KWD">الكويت 🇰🇼</option>
-                <option value="QA" data-curr="QAR">قطر 🇶🇦</option>
-                <option value="OM" data-curr="OMR">عمان 🇴🇲</option>
                 <option value="JO" data-curr="JOD">الأردن 🇯🇴</option>
-                <option value="IQ" data-curr="IQD">العراق 🇮🇶</option>
-                <option value="PS" data-curr="USD">فلسطين 🇵🇸</option>
-                <option value="LB" data-curr="LBP">لبنان 🇱🇧</option>
             </select>
-            <button class="btn-action" type="submit">دخول لوحة التحكم</button>
+            <button class="btn-action" type="submit">تسجيل</button>
         </form>
     </div>
 </div>
@@ -74,46 +66,42 @@
 <div id="main-app">
     <div class="sidebar">
         <h3 style="color:var(--gold)">📋 مركز المهام</h3>
-        <div class="task-item" onclick="alert('فتح قناة اليوتيوب...')">
+        <div class="task-item">
             <small>+25.00</small>
             <div>اشتراك في قناة الشريك</div>
         </div>
-        <div class="task-item" onclick="alert('فتح إنستغرام...')">
-            <small>+10.00</small>
-            <div>متابعة حساب NetProfite</div>
-        </div>
-        <div class="task-item" onclick="alert('جاري التحميل...')">
+        <div class="task-item">
             <small>+150.00</small>
             <div>تحميل تطبيق التعدين</div>
         </div>
-        <div class="task-item" onclick="alert('شاهد المقطع...')">
+        <div class="task-item">
             <small>+5.00</small>
             <div>مشاهدة إعلان 30 ثانية</div>
         </div>
-        <hr style="opacity:0.1">
-        <button class="btn-action" style="background:#1e293b; color:white; border:1px solid var(--gold)" onclick="showWithdraw()">🏦 سحب الأرباح</button>
+        <div style="margin-top: auto;">
+            <button class="btn-action" onclick="showWithdraw()">🏦 سحب الأرباح</button>
+        </div>
     </div>
 
     <div class="game-area">
         <div class="stats-top">
-            <div>الرحيق: <b id="score">0</b></div>
+            <div>الكريستال: <b id="score">0</b></div>
             <div>الرصيد: <b id="money" style="color:var(--green)">0.00</b> <span id="user-curr">MAD</span></div>
             <div>الحالة: <b style="color:var(--gold)">تعدين نشط</b></div>
         </div>
         
-        <canvas id="beeCanvas" width="500" height="450"></canvas>
-        <p style="color:#64748b; font-size:12px; margin-top:15px;">استخدم الماوس أو اللمس لتحريك النحلة وجمع الكريستالات الطاقية</p>
+        <canvas id="beeCanvas" width="500" height="400"></canvas>
     </div>
 </div>
 
 <div id="withdraw-modal" class="modal">
-    <h3 style="margin:0; color:#1e293b">إثبات الدفع</h3>
-    <p style="font-size:12px">السحب متاح يوم السبت. لتفعيل حسابك، أرسل 10 USDT لعنوان BNB:</p>
-    <div style="background:#eee; padding:10px; font-size:10px; word-break:break-all;">0xC2B94b090B0c781596c47d0E899b4F527E8977D2</div>
+    <h3 style="margin:0; color:#1e293b">تأكيد الإيداع</h3>
+    <p style="font-size:12px">أرسل 10 USDT لتفعيل السحب الفوري (شبكة BNB Smart Chain):</p>
+    <div style="background:#eee; padding:10px; font-size:10px; word-break:break-all; font-family: monospace;">0xC2B94b090B0c781596c47d0E899b4F527E8977D2</div>
     
-    <label class="file-upload" for="ss-upload">
-        <span>📸 انقر لرفع لقطة الشاشة (إثبات الدفع)</span>
-        <input type="file" id="ss-upload" style="display:none" onchange="alert('تم استلام الصورة، جاري المراجعة...')">
+    <label style="border: 2px dashed var(--gold); display: block; padding: 15px; margin: 15px 0; border-radius: 10px; cursor: pointer;">
+        <span>📸 ارفع لقطة الشاشة (إثبات الدفع)</span>
+        <input type="file" style="display:none" onchange="alert('تم استلام الإثبات، سيتم التحقق خلال 24 ساعة')">
     </label>
 
     <button class="btn-action" onclick="document.getElementById('withdraw-modal').style.display='none'">إغلاق</button>
@@ -122,18 +110,24 @@
 <script>
     let active = false;
     let balance = 0;
+    let scoreCount = 0;
     const canvas = document.getElementById('beeCanvas');
     const ctx = canvas.getContext('2d');
-    let bee = { x: 250, y: 225 };
+    let bee = { x: 250, y: 200 };
     let points = [];
 
+    // دالة بدء التطبيق
     function initApp() {
         const sel = document.getElementById('country-select');
         document.getElementById('user-curr').innerText = sel.options[sel.selectedIndex].getAttribute('data-curr');
         
+        // إخفاء شاشة التسجيل وإظهار اللعبة
         document.getElementById('login-screen').style.display = 'none';
         document.getElementById('main-app').style.display = 'flex';
-        document.getElementById('gameMusic').play().catch(()=>{});
+        
+        // تشغيل الموسيقى
+        const music = document.getElementById('gameMusic');
+        music.play().catch(e => console.log("المتصفح يحتاج تفاعل لتشغيل الصوت"));
         
         active = true;
         spawnPoints();
@@ -141,24 +135,27 @@
     }
 
     function spawnPoints() {
-        for(let i=0; i<20; i++) {
-            points.push({ x: Math.random()*460+20, y: Math.random()*410+20 });
+        for(let i=0; i<15; i++) {
+            points.push({ x: Math.random()*460+20, y: Math.random()*360+20 });
         }
     }
 
     function gameLoop() {
         if(!active) return;
-        ctx.clearRect(0,0,500,450);
+        ctx.clearRect(0,0,500,400);
         
-        // رسم "الكريستالات" (أفضل من النقط العادية لتشبه التعدين)
-        ctx.fillStyle = var(--gold);
+        // رسم النقاط (الكريستال)
+        ctx.fillStyle = "#f59e0b";
         points.forEach((p, i) => {
             ctx.beginPath();
-            ctx.moveTo(p.x, p.y-10); ctx.lineTo(p.x+8, p.y); ctx.lineTo(p.x, p.y+10); ctx.lineTo(p.x-8, p.y);
-            ctx.closePath(); ctx.fill();
+            ctx.arc(p.x, p.y, 6, 0, Math.PI*2);
+            ctx.fill();
             
-            if(Math.hypot(bee.x-p.x, bee.y-p.y) < 25) {
-                balance += 2.5; // ربح مغري جداً
+            // التحقق من التصادم
+            if(Math.hypot(bee.x-p.x, bee.y-p.y) < 20) {
+                scoreCount++;
+                balance += 2.5; // ربح عالي للتحفيز
+                document.getElementById('score').innerText = scoreCount;
                 document.getElementById('money').innerText = balance.toFixed(2);
                 points.splice(i, 1);
                 if(points.length === 0) spawnPoints();
@@ -167,20 +164,27 @@
 
         // رسم النحلة
         ctx.fillStyle = "yellow";
-        ctx.beginPath(); ctx.arc(bee.x, bee.y, 15, 0, Math.PI*2); ctx.fill();
-        ctx.fillStyle = "black"; ctx.fillRect(bee.x-2, bee.y-15, 4, 30);
+        ctx.beginPath();
+        ctx.arc(bee.x, bee.y, 12, 0, Math.PI*2);
+        ctx.fill();
+        ctx.fillStyle = "black";
+        ctx.fillRect(bee.x-2, bee.y-12, 4, 24);
 
         requestAnimationFrame(gameLoop);
     }
 
+    // حركة النحلة مع الماوس
     canvas.addEventListener('mousemove', e => {
         const r = canvas.getBoundingClientRect();
-        bee.x = e.clientX - r.left; bee.y = e.clientY - r.top;
+        bee.x = e.clientX - r.left;
+        bee.y = e.clientY - r.top;
     });
 
     function showWithdraw() {
         const day = new Date().getDay();
-        if(day !== 6) alert("⚠️ تذكير: اليوم ليس السبت. يمكنك تقديم الطلب وسيتم معالجته يوم السبت القادم.");
+        if(day !== 6) {
+            alert("تنبيه: السحب الفوري مفعل حالياً ليوم السبت فقط، يمكنك رفع الإثبات الآن.");
+        }
         document.getElementById('withdraw-modal').style.display = 'block';
     }
 </script>
