@@ -1,71 +1,61 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <title>بطاقة دعوة بديعة ويونس</title>
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            background-color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        /* تصميم البطاقة للطباعة */
-        .invitation-card {
-            width: 15cm;
-            height: 10cm;
-            border: 5px double #000;
-            padding: 30px;
-            text-align: center;
-            font-family: 'Amiri', serif;
-            position: relative;
-            background: white;
-        }
-        .invitation-card::before {
-            content: "";
-            position: absolute;
-            top: 10px; left: 10px; right: 10px; bottom: 10px;
-            border: 1px solid #000;
-            pointer-events: none;
-        }
-        h1 { font-size: 35px; margin-bottom: 10px; }
-        .names { font-size: 40px; font-weight: bold; margin: 20px 0; }
-        .date-box { border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 10px 0; margin: 20px 0; }
-        .footer { font-size: 18px; margin-top: 30px; }
-        
-        /* إخفاء أي شيء آخر عند الطباعة */
-        @media print {
-            body { background: none; }
-            .invitation-card { border: 3px solid #000; }
-        }
-    </style>
-</head>
-<body>
+// BuyNow Driver Onboarding Component
+import React, { useState } from 'react';
 
-    <div class="invitation-card">
-        <div>بِسمِ اللَّهِ الرَّحمَنِ الرَّحِيمِ</div>
-        <p>"وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا"</p>
+const DriverSignup = () => {
+  const [vehicleType, setVehicleType] = useState('bike');
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 font-sans">
+      <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl p-8 border border-gray-100">
+        <h2 className="text-3xl font-bold text-center text-blue-600 mb-2">BuyNow</h2>
+        <p className="text-center text-gray-500 mb-8">انضم إلى فريق التوصيل وباشر عملك في مدينتك</p>
         
-        <h1>دعوة زفاف</h1>
-        
-        <div class="names">بديعة & يونس</div>
-        
-        <p>يتشرف عائلتا العروسين بدعوتكم لحضور حفل الزفاف <br> وذلك يوم:</p>
-        
-        <div class="date-box">
-            <strong>الجمعة 07 أغسطس 2026</strong> <br>
-            الموافق لـ 24 صفر 1448 هـ
-        </div>
-        
-        <div class="footer">
-            حضوركم تشريف لنا وفرحة تكتمل بها سعادتنا
-            <br>
-            <small>بمدينة تطوان</small>
-        </div>
+        <form className="space-y-6 text-right" dir="rtl">
+          {/* اختيار نوع المركبة */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">نوع المركبة</label>
+            <div className="grid grid-cols-3 gap-4">
+              {['دراجة', 'سيارة', 'شاحنة كبيرة'].map((type) => (
+                <button
+                  key={type}
+                  type="button"
+                  onClick={() => setVehicleType(type)}
+                  className={`py-3 px-4 border rounded-lg text-sm transition-all ${
+                    vehicleType === type ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-300'
+                  }`}
+                >
+                  {type}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* معلومات الهوية */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">الاسم الكامل</label>
+              <input type="text" className="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2 bg-gray-50 outline-none focus:ring-2 focus:ring-blue-400" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">رقم البطاقة الوطنية (CNI)</label>
+              <input type="text" className="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2 bg-gray-50 outline-none focus:ring-2 focus:ring-blue-400" />
+            </div>
+          </div>
+
+          {/* رفع الوثائق */}
+          <div className="border-2 border-dashed border-gray-200 p-6 rounded-lg text-center bg-blue-50/30">
+            <label className="block text-sm font-medium text-blue-700 mb-2">صورة الهوية الوطنية + الصورة الشخصية</label>
+            <input type="file" className="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" multiple />
+            <p className="mt-2 text-xs text-gray-400 font-light italic">يجب أن تكون الصور واضحة لمراجعتها من قبل الإدارة</p>
+          </div>
+
+          <button className="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700 transition-colors shadow-lg">
+            إرسال طلب الانضمام لـ BuyNow
+          </button>
+        </form>
+      </div>
     </div>
+  );
+};
 
-</body>
-</html>
+export default DriverSignup;
