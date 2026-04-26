@@ -3,57 +3,196 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maghreb Shop | منصة البيع الذكية</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>Maghreb Market | منصة التسوق الذكية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #2563eb; --gold: #f59e0b; --bg: #f8fafc; --text: #1e293b; }
-        body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; color: var(--text); }
+        :root {
+            --primary-color: #2563eb; /* أزرق ملكي */
+            --accent-color: #f59e0b;  /* ذهبي */
+            --bg-light: #f1f5f9;
+            --text-dark: #0f172a;
+        }
+
+        * { box-sizing: border-box; font-family: 'Cairo', sans-serif; }
+        body { background-color: var(--bg-light); margin: 0; color: var(--text-dark); }
+
+        /* الهيدر */
+        header {
+            background: white;
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            sticky: top;
+        }
+
+        .logo { font-size: 24px; font-weight: 900; color: var(--primary-color); }
         
-        header { background: white; padding: 15px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
-        .logo { color: var(--primary); font-weight: 900; font-size: 24px; }
+        /* محرك البحث */
+        .search-bar {
+            flex-grow: 0.5;
+            display: flex;
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 5px 15px;
+            border: 1px solid #e2e8f0;
+        }
+        .search-bar input {
+            border: none;
+            background: transparent;
+            width: 100%;
+            padding: 10px;
+            outline: none;
+        }
 
-        .container { max-width: 1200px; margin: 20px auto; padding: 10px; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        /* حاوية المنتجات */
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
 
-        /* كرت المنتج */
-        .product-card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: 0.3s; position: relative; }
-        .product-card:hover { transform: translateY(-5px); }
-        .product-image { width: 100%; height: 200px; background: #eee; display: flex; align-items: center; justify-content: center; font-size: 50px; }
-        
-        .product-info { padding: 20px; }
-        .price { color: var(--primary); font-size: 22px; font-weight: 900; margin: 10px 0; }
-        .site-tag { font-size: 12px; background: #e2e8f0; padding: 4px 10px; border-radius: 50px; display: inline-block; margin-bottom: 10px; }
+        /* بطاقة المنتج الاحترافية */
+        .product-card {
+            background: white;
+            border-radius: 20px;
+            padding: 15px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            display: flex;
+            flex-direction: column;
+        }
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+            border-color: var(--primary-color);
+        }
 
-        .buy-btn { background: var(--gold); color: white; border: none; width: 100%; padding: 12px; border-radius: 12px; font-weight: 700; font-size: 16px; cursor: pointer; text-decoration: none; display: block; text-align: center; }
-        .buy-btn:hover { background: #d97706; }
+        .image-container {
+            background: #f8fafc;
+            height: 220px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+
+        .source-badge {
+            font-size: 11px;
+            font-weight: bold;
+            background: #dbeafe;
+            color: var(--primary-color);
+            padding: 4px 12px;
+            border-radius: 50px;
+            align-self: flex-start;
+        }
+
+        .product-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 12px 0 5px 0;
+            height: 50px;
+            overflow: hidden;
+        }
+
+        .product-price {
+            font-size: 22px;
+            font-weight: 900;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+        }
+        .product-price span { font-size: 14px; color: #64748b; }
+
+        .buy-now {
+            background: var(--primary-color);
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+        .buy-now:hover { background: #1e40af; }
+
+        /* نسخة الموبايل */
+        @media (max-width: 600px) {
+            .container { grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; }
+            .product-title { font-size: 14px; height: 40px; }
+            .product-price { font-size: 18px; }
+            .image-container { height: 150px; font-size: 40px; }
+        }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="logo">MAGHREB SHOP 🇲🇦</div>
+    <div class="logo">MAGHREB MARKET</div>
+    <div class="search-bar">
+        <input type="text" placeholder="ابحث عن منتج، ماركة، أو فئة...">
+    </div>
 </header>
 
-<div class="container" id="products-grid">
-    <div class="product-card">
-        <div class="product-image">📱</div>
-        <div class="product-info">
-            <span class="site-tag">Jumia.ma</span>
-            <h3>هاتف ذكي أندرويد</h3>
-            <div class="price">2,499 DH</div>
-            <a href="رابط_جوميا_الخاص_بك_هنا" target="_blank" class="buy-btn">شراء الآن</a>
-        </div>
+<div class="container" id="productGrid">
     </div>
 
-    <div class="product-card">
-        <div class="product-image">🎧</div>
-        <div class="product-info">
-            <span class="site-tag">Amazon</span>
-            <h3>سماعات لاسلكية</h3>
-            <div class="price">450 DH</div>
-            <a href="رابط_أمازون_الخاص_بك_هنا" target="_blank" class="buy-btn">شراء الآن</a>
-        </div>
-    </div>
-</div>
+<script>
+    /* سهولة الإضافة:
+       لإضافة منتج جديد، فقط أضف سطراً جديداً داخل المصفوفة أدناه []
+    */
+    const products = [
+        {
+            title: "ساعة ذكية Series 8 - مقاومة للماء",
+            price: "350",
+            source: "Jumia",
+            icon: "⌚",
+            link: "https://jumia.ma/your-link"
+        },
+        {
+            title: "سماعات AirPods Pro الجيل الثاني",
+            price: "1,200",
+            source: "Amazon",
+            icon: "🎧",
+            link: "https://amazon.com/your-link"
+        },
+        {
+            title: "ماكينة قهوة احترافية - إيسبريسو",
+            price: "850",
+            source: "AliExpress",
+            icon: "☕",
+            link: "https://aliexpress.com/your-link"
+        },
+        {
+            title: "لوحة مفاتيح ميكانيكية للألعاب RGB",
+            price: "400",
+            source: "Jumia",
+            icon: "⌨️",
+            link: "#"
+        }
+    ];
+
+    function loadProducts() {
+        const grid = document.getElementById('productGrid');
+        grid.innerHTML = products.map(item => `
+            <div class="product-card">
+                <div class="source-badge">${item.source}</div>
+                <div class="image-container">${item.icon}</div>
+                <div class="product-title">${item.title}</div>
+                <div class="product-price">${item.price} <span>DH</span></div>
+                <a href="${item.link}" target="_blank" class="buy-now">عرض المنتج</a>
+            </div>
+        `).join('');
+    }
+
+    // تشغيل الدالة عند تحميل الصفحة
+    window.onload = loadProducts;
+</script>
 
 </body>
 </html>
