@@ -3,188 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NetProfite Farm | المزرعة الذكية</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <title>NetProfite Farm | المزرعة السحرية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --brown: #5d4037; --green: #2ecc71; --gold: #f1c40f; --bg: #e0f2f1; }
-        body { background: var(--bg); color: #333; font-family: 'Cairo', sans-serif; margin: 0; overflow-x: hidden; }
+        :root { --land: #8d6e63; --sky: #81d4fa; --grass: #4caf50; --gold: #ffc107; }
+        body { margin: 0; font-family: 'Cairo', sans-serif; background: #222; color: #fff; overflow: hidden; }
+
+        /* شاشة التسجيل المحسنة */
+        #login-screen { 
+            background: linear-gradient(to bottom, #4facfe 0%, #00f2fe 100%);
+            height: 100vh; display: flex; align-items: center; justify-content: center;
+            position: fixed; width: 100%; z-index: 9999;
+        }
+        .login-card { background: white; padding: 30px; border-radius: 25px; width: 340px; text-align: center; color: #333; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+        select, input { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #eee; border-radius: 12px; font-weight: bold; }
+
+        /* واجهة اللعبة */
+        #main-app { display: none; height: 100vh; display: flex; flex-direction: column; background: var(--sky); }
         
-        /* إصلاح قائمة الدول */
-        #login-screen { background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%); height: 100vh; display: flex; align-items: center; justify-content: center; position: fixed; width: 100%; z-index: 9999; }
-        .login-card { background: white; padding: 30px; border-radius: 20px; width: 350px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
-        select { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #ddd; border-radius: 10px; background: white; color: #333; font-weight: bold; font-family: 'Cairo'; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #ddd; border-radius: 10px; box-sizing: border-box; }
+        .header { background: rgba(0,0,0,0.2); padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .balance-tag { background: var(--gold); color: #000; padding: 5px 15px; border-radius: 20px; font-weight: 900; box-shadow: 0 4px 0 #b7950b; }
 
-        /* واجهة المزرعة */
-        #main-app { display: none; display: flex; flex-direction: column; height: 100vh; }
-        .top-stats { background: white; padding: 15px; display: flex; justify-content: space-around; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        /* المزرعة التفاعلية */
+        .farm-view { flex-grow: 1; position: relative; overflow: hidden; background: linear-gradient(to bottom, #81d4fa 0%, #e1f5fe 100%); }
+        .ground { position: absolute; bottom: 0; width: 100%; height: 30%; background: var(--land); border-top: 10px solid var(--grass); }
         
-        .farm-grid { flex-grow: 1; display: flex; align-items: center; justify-content: center; background: #8d6e63; position: relative; }
-        .plot { width: 250px; height: 350px; background: #6d4c41; border: 10px solid #5d4037; border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
-        
-        /* حالة النبتة */
-        .plant { width: 100px; transition: 0.5s; }
-        .seed { height: 20px; width: 20px; background: #3e2723; border-radius: 50%; }
-        .growing { height: 100px; background: #4caf50; width: 10; border-radius: 5px; }
-        .withered { filter: grayscale(1) sepia(1) opacity(0.7); }
+        /* النبتة المتحركة */
+        .plant-container { position: absolute; bottom: 25%; left: 50%; transform: translateX(-50%); text-align: center; }
+        .plant-img { width: 120px; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform-origin: bottom; }
+        .wobble { animation: wobble 2s infinite; }
+        @keyframes wobble { 0%, 100% { transform: rotate(-2deg); } 50% { transform: rotate(2deg); } }
 
-        /* أزرار التحكم */
-        .controls { background: white; padding: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .btn-farm { padding: 15px; border: none; border-radius: 12px; font-weight: 900; cursor: pointer; color: white; transition: 0.3s; }
-        .btn-water { background: #3498db; }
-        .btn-seed { background: #8e44ad; }
-        .btn-harvest { background: var(--green); }
-        .btn-fertilize { background: var(--gold); }
-        .btn-disabled { background: #ccc !important; cursor: not-allowed; }
+        /* أزرار الأكشن السفلية */
+        .actions { background: #fff; padding: 20px; display: flex; justify-content: space-around; border-radius: 30px 30px 0 0; }
+        .action-btn { width: 70px; height: 70px; border-radius: 50%; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 24px; transition: 0.2s; box-shadow: 0 5px 0 #ccc; }
+        .action-btn:active { transform: translateY(5px); box-shadow: none; }
+        .btn-seed { background: #8d6e63; color: white; }
+        .btn-water { background: #03a9f4; color: white; }
+        .btn-harvest { background: #4caf50; color: white; }
+        .btn-locked { background: #eee; color: #aaa; cursor: not-allowed; box-shadow: none; }
 
-        /* الباقات */
-        .vip-row { overflow-x: auto; display: flex; gap: 10px; padding: 10px; background: #fff; }
-        .vip-card { min-width: 120px; padding: 10px; border: 2px solid #eee; border-radius: 10px; text-align: center; }
-        .vip-card.active { border-color: var(--green); background: #f1fcf6; }
+        /* تأثيرات الربح */
+        .coin-popup { position: absolute; color: var(--gold); font-weight: 900; font-size: 24px; animation: floatUp 1s forwards; pointer-events: none; }
+        @keyframes floatUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-100px); } }
 
-        .modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 25px; border-radius: 20px; width: 320px; z-index: 10000; text-align: center; box-shadow: 0 0 50px rgba(0,0,0,0.5); }
+        #timer-text { font-weight: 900; color: #fff; text-shadow: 2px 2px 5px rgba(0,0,0,0.3); font-size: 20px; }
     </style>
 </head>
 <body>
 
-<audio id="farmMusic" loop>
-    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3" type="audio/mpeg">
-</audio>
+<audio id="sound-water"><source src="https://www.myinstants.com/media/sounds/water-pour.mp3" type="audio/mpeg"></audio>
+<audio id="sound-coin"><source src="https://www.myinstants.com/media/sounds/coin-collect.mp3" type="audio/mpeg"></audio>
+<audio id="bg-music" loop><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mpeg"></audio>
 
 <div id="login-screen">
     <div class="login-card">
-        <h2 style="color:var(--green); margin:0;">NetProfite Farm</h2>
-        <p>ازرع، اسقِ، واحصد أرباحك الحقيقية</p>
-        <form onsubmit="event.preventDefault(); startFarm();">
-            <input type="text" id="u_name" placeholder="الاسم الكامل" required>
-            <input type="email" placeholder="البريد الإلكتروني" required>
-            <select id="country-select">
+        <h1 style="margin:0; color:#2ecc71;">NetProfite 🌾</h1>
+        <p>المزرعة التي تجعلك ثرياً</p>
+        <form onsubmit="event.preventDefault(); startApp();">
+            <input type="text" id="p_name" placeholder="اسمك الكامل" required>
+            <input type="email" placeholder="بريدك الإلكتروني" required>
+            <select id="p_country">
                 <option value="MA" data-curr="MAD">المغرب 🇲🇦</option>
-                <option value="DZ" data-curr="DZD">الجزائر 🇩🇿</option>
                 <option value="SA" data-curr="SAR">السعودية 🇸🇦</option>
                 <option value="EG" data-curr="EGP">مصر 🇪🇬</option>
-                <option value="AE" data-curr="AED">الإمارات 🇦🇪</option>
-                <option value="JO" data-curr="JOD">الأردن 🇯🇴</option>
+                <option value="DZ" data-curr="DZD">الجزائر 🇩🇿</option>
             </select>
-            <button class="btn-farm" style="background:var(--brown); width:100%; margin-top:10px;" type="submit">تسجيل المزارع</button>
+            <button style="background:#4caf50; color:white; border:none; padding:15px; width:100%; border-radius:12px; font-weight:900; margin-top:10px; cursor:pointer;">تسجيل وابدأ الزرع</button>
         </form>
     </div>
 </div>
 
 <div id="main-app">
-    <div class="top-stats">
-        <div>المحصول: <b id="balance">0.00</b> <span id="curr">MAD</span></div>
-        <div>الباقة: <b style="color:var(--gold)" id="vip-level">برونزية</b></div>
+    <div class="header">
+        <div id="timer-text">جاهز للزرع 🚜</div>
+        <div class="balance-tag"><span id="balance">0.00</span> <span id="curr-sym">MAD</span></div>
     </div>
 
-    <div class="farm-grid">
-        <div id="status-tag" style="position:absolute; top:20px; background:rgba(0,0,0,0.5); color:white; padding:5px 15px; border-radius:20px;">جاهز للزرع</div>
-        <div class="plot">
-            <div id="plant-visual" class="seed" style="display:none;"></div>
-            <div id="timer-display" style="margin-top:20px; font-weight:bold; color:white;">00:00:00</div>
+    <div class="farm-view">
+        <div class="plant-container">
+            <img id="plant-img" class="plant-img" src="https://cdn-icons-png.flaticon.com/512/628/628283.png" style="display:none">
+            <div id="growth-per" style="font-weight:900; color:#2e7d32"></div>
         </div>
+        <div class="ground"></div>
     </div>
 
-    <div class="vip-row">
-        <div class="vip-card active"><h5>برونز</h5><small>أرباح عادية</small></div>
-        <div class="vip-card" onclick="showShop()"><h5>فضة</h5><small>وقت -50%</small></div>
-        <div class="vip-card" onclick="showShop()"><h5>ذهب</h5><small>ثمار ضخمة</small></div>
+    <div class="actions">
+        <div style="text-align:center"><button id="btn-seed" class="action-btn btn-seed" onclick="plant()">🌱</button><small style="color:#333">زرع</small></div>
+        <div style="text-align:center"><button id="btn-water" class="action-btn btn-locked" onclick="water()">💧</button><small style="color:#333">سقي</small></div>
+        <div style="text-align:center"><button id="btn-harvest" class="action-btn btn-locked" onclick="harvest()">💰</button><small style="color:#333">حصاد</small></div>
     </div>
-
-    <div class="controls">
-        <button id="btn-seed" class="btn-farm btn-seed" onclick="actionPlant()">🌱 زرع البذور</button>
-        <button id="btn-water" class="btn-farm btn-water btn-disabled" onclick="actionWater()">💧 سقي (3س)</button>
-        <button id="btn-fertilize" class="btn-farm btn-fertilize btn-disabled" onclick="actionFertilize()">🧪 تسميد (عاجل)</button>
-        <button id="btn-harvest" class="btn-farm btn-harvest btn-disabled" onclick="actionHarvest()">💰 حصاد الأرباح</button>
-    </div>
-</div>
-
-<div id="shop-modal" class="modal">
-    <h3 id="modal-title">تطوير المزرعة</h3>
-    <p style="font-size:13px">لتقليص وقت الحصاد إلى 6 ساعات ومضاعفة الأرباح، قم بشحن باقة الذهب (20 USDT).</p>
-    <div style="background:#eee; padding:10px; font-size:11px; word-break:break-all;">0xC2B94b090B0c781596c47d0E899b4F527E8977D2</div>
-    <button class="btn-farm" style="background:#333; width:100%" onclick="document.getElementById('shop-modal').style.display='none'">إغلاق</button>
 </div>
 
 <script>
-    let stage = 0; // 0: empty, 1: planted, 2: watered1, 3: watered2, 4: ready
-    let balance = 0;
+    let stage = 0; 
+    let money = 0;
     let currency = "MAD";
-    let isWithered = false;
 
-    function startFarm() {
-        const sel = document.getElementById('country-select');
+    function startApp() {
+        const sel = document.getElementById('p_country');
         currency = sel.options[sel.selectedIndex].getAttribute('data-curr');
-        document.getElementById('curr').innerText = currency;
+        document.getElementById('curr-sym').innerText = currency;
         document.getElementById('login-screen').style.display = 'none';
         document.getElementById('main-app').style.display = 'flex';
-        document.getElementById('farmMusic').play().catch(()=>{});
+        document.getElementById('bg-music').play().catch(()=>{});
     }
 
-    function actionPlant() {
+    function plant() {
         if(stage !== 0) return;
         stage = 1;
-        updateUI("تم الزرع! انتظر 3 ساعات للسقي الأول", "seed");
-        toggleButtons(['btn-water'], ['btn-seed']);
-        startCountdown(10800); // 3 ساعات تخيلياً للنموذج (يمكنك جعلها بالثواني للتجربة)
+        document.getElementById('sound-water').play();
+        const img = document.getElementById('plant-img');
+        img.src = "https://cdn-icons-png.flaticon.com/512/628/628283.png"; // بذرة
+        img.style.display = "block";
+        img.style.transform = "scale(0.5)";
+        
+        updateStatus("البذرة تنمو... سقي بعد 3 ساعات", "btn-water", "btn-seed");
+        startTimer(10); // محاكاة لـ 10 ثواني للتجربة (غيرها لـ 10800 للواقعية)
     }
 
-    function actionWater() {
+    function water() {
         if(stage === 1) {
             stage = 2;
-            updateUI("تم السقي! انتظر 5 ساعات للسقي الثاني", "growing");
-            // محاكاة نظام الفساد: إذا لم يسقِ خلال مدة معينة يذبل
-        } else if(stage === 3) {
-            stage = 4;
-            updateUI("المحصول نضج! جاهز للحصاد", "growing");
-            toggleButtons(['btn-harvest'], ['btn-water']);
+            document.getElementById('sound-water').play();
+            const img = document.getElementById('plant-img');
+            img.src = "https://cdn-icons-png.flaticon.com/512/892/892926.png"; // نبتة صغيرة
+            img.style.transform = "scale(0.8)";
+            img.classList.add('wobble');
+            updateStatus("النبتة تكبر! حصاد بعد 24 ساعة", "btn-harvest", "btn-water");
         }
     }
 
-    function actionHarvest() {
-        let profit = isWithered ? 50 : 200; // نقاط أقل إذا ذبلت
-        balance += profit;
-        document.getElementById('balance').innerText = balance.toFixed(2);
-        alert("مبروك! لقد حصدت " + profit + " " + currency);
-        resetFarm();
+    function harvest() {
+        if(stage === 2) {
+            document.getElementById('sound-coin').play();
+            showCoinPopup();
+            money += 250;
+            document.getElementById('balance').innerText = money.toFixed(2);
+            alert("تم الحصاد بنجاح! ربحت " + 250 + " " + currency);
+            reset();
+        }
     }
 
-    function updateUI(msg, visualClass) {
-        document.getElementById('status-tag').innerText = msg;
-        const v = document.getElementById('plant-visual');
-        v.style.display = 'block';
-        v.className = visualClass;
+    function updateStatus(txt, toEnable, toDisable) {
+        document.getElementById('timer-text').innerText = txt;
+        document.getElementById(toEnable).className = "action-btn " + toEnable.replace('btn-','btn-');
+        document.getElementById(toDisable).className = "action-btn btn-locked";
     }
 
-    function toggleButtons(enableIds, disableIds) {
-        enableIds.forEach(id => document.getElementById(id).classList.remove('btn-disabled'));
-        disableIds.forEach(id => document.getElementById(id).classList.add('btn-disabled'));
-    }
-
-    function resetFarm() {
+    function reset() {
         stage = 0;
-        updateUI("جاهز للزرع", "seed");
-        document.getElementById('plant-visual').style.display = 'none';
-        toggleButtons(['btn-seed'], ['btn-water', 'btn-harvest', 'btn-fertilize']);
+        document.getElementById('plant-img').style.display = "none";
+        document.getElementById('plant-img').classList.remove('wobble');
+        updateStatus("جاهز للزرع 🚜", "btn-seed", "btn-harvest");
     }
 
-    function showShop() {
-        document.getElementById('shop-modal').style.display = 'block';
+    function showCoinPopup() {
+        const p = document.createElement('div');
+        p.className = 'coin-popup';
+        p.innerText = "+250 " + currency;
+        p.style.left = "50%"; p.style.top = "50%";
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), 1000);
     }
 
-    function startCountdown(seconds) {
-        let t = seconds;
-        const display = document.getElementById('timer-display');
-        const inter = setInterval(() => {
-            t--;
-            let h = Math.floor(t / 3600);
-            let m = Math.floor((t % 3600) / 60);
-            let s = t % 60;
-            display.innerText = `${h}:${m}:${s}`;
-            if(t <= 0) clearInterval(inter);
-        }, 1000);
-    }
-</script>
-
-</body>
-</html>
+    function startTimer(sec
