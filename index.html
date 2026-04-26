@@ -2,110 +2,70 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إلى أميرة قلبي بديعة</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Reem+Kufi:wght@500&display=swap" rel="stylesheet">
+    <title>بطاقة دعوة بديعة ويونس</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            margin: 0; padding: 0; display: flex; justify-content: center; align-items: center;
-            min-height: 100vh; background: radial-gradient(circle, #ffafbd, #ffc3a0);
-            font-family: 'Cairo', sans-serif; overflow: hidden; color: #d63384;
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
         }
-
-        /* شاشة البداية لتفعيل الصوت (قوانين المتصفحات تطلب نقرة لتشغيل الصوت) */
-        #overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255, 255, 255, 0.98); z-index: 100; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; transition: 1s;
+        /* تصميم البطاقة للطباعة */
+        .invitation-card {
+            width: 15cm;
+            height: 10cm;
+            border: 5px double #000;
+            padding: 30px;
+            text-align: center;
+            font-family: 'Amiri', serif;
+            position: relative;
+            background: white;
         }
-
-        .start-btn {
-            background: #ff4d6d; color: white; border: none; padding: 18px 45px;
-            border-radius: 50px; font-size: 1.6rem; font-family: 'Cairo';
-            cursor: pointer; box-shadow: 0 10px 25px rgba(255, 77, 109, 0.4);
-            transition: 0.3s;
+        .invitation-card::before {
+            content: "";
+            position: absolute;
+            top: 10px; left: 10px; right: 10px; bottom: 10px;
+            border: 1px solid #000;
+            pointer-events: none;
         }
-        .start-btn:hover { transform: scale(1.05); background: #ff3355; }
-
-        /* حاوية الرسالة */
-        .card {
-            background: rgba(255, 255, 255, 0.96); padding: 45px; border-radius: 35px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15); text-align: center;
-            max-width: 500px; width: 90%; z-index: 10; border: 4px solid #fff;
-            display: none; animation: fadeIn 2.5s ease-out;
+        h1 { font-size: 35px; margin-bottom: 10px; }
+        .names { font-size: 40px; font-weight: bold; margin: 20px 0; }
+        .date-box { border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 10px 0; margin: 20px 0; }
+        .footer { font-size: 18px; margin-top: 30px; }
+        
+        /* إخفاء أي شيء آخر عند الطباعة */
+        @media print {
+            body { background: none; }
+            .invitation-card { border: 3px solid #000; }
         }
-
-        h1 { font-family: 'Reem Kufi', sans-serif; font-size: 2.8rem; margin: 0; color: #ff4d6d; }
-        .recipient-name { font-size: 3.5rem; display: block; margin: 10px 0 20px 0; color: #d63384; font-weight: 700; }
-        p { font-size: 1.3rem; line-height: 1.8; margin-bottom: 30px; color: #444; }
-        .heart-icon { font-size: 70px; color: #ff4d6d; animation: pulse 1.2s infinite; display: inline-block; }
-
-        .heart { position: absolute; top: -25px; color: #ff4d6d; user-select: none; z-index: 1; animation: fall linear forwards; }
-
-        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3); } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
-
-        .signature { font-weight: bold; font-size: 1.4rem; color: #ff4d6d; margin-top: 25px; display: block; }
     </style>
 </head>
 <body>
 
-    <audio id="bgMusic" loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-    </audio>
-
-    <div id="overlay">
-        <div class="heart-icon" style="margin-bottom: 30px;">💖</div>
-        <button class="start-btn" onclick="startExperience()">اضغطي هنا يا بديعة 🌹</button>
-        <p style="margin-top: 25px; font-size: 15px; color: #777;">افتحي الصوت واستعدي للمفاجأة</p>
+    <div class="invitation-card">
+        <div>بِسمِ اللَّهِ الرَّحمَنِ الرَّحِيمِ</div>
+        <p>"وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا"</p>
+        
+        <h1>دعوة زفاف</h1>
+        
+        <div class="names">بديعة & يونس</div>
+        
+        <p>يتشرف عائلتا العروسين بدعوتكم لحضور حفل الزفاف <br> وذلك يوم:</p>
+        
+        <div class="date-box">
+            <strong>الجمعة 07 أغسطس 2026</strong> <br>
+            الموافق لـ 24 صفر 1448 هـ
+        </div>
+        
+        <div class="footer">
+            حضوركم تشريف لنا وفرحة تكتمل بها سعادتنا
+            <br>
+            <small>بمدينة تطوان</small>
+        </div>
     </div>
 
-    <div class="card" id="loveCard">
-        <div class="heart-icon">❤️</div>
-        <h1>إلى ملكة قلبي</h1>
-        <span class="recipient-name">بديعة</span>
-        <p>
-            بديعة الغالية.. <br>
-            وجودك في حياتي هو أجمل هدية من ربنا. شكراً على كل لحظة حلوة، شكراً على حبك اللي بيخلي الدنيا في عيني أجمل. 
-        </p>
-        <span class="signature">بحبك يا أغلى ما عندي</span>
-    </div>
-
-    <script>
-        function startExperience() {
-            // إخفاء الستارة ببطء
-            const overlay = document.getElementById('overlay');
-            const music = document.getElementById('bgMusic');
-            
-            overlay.style.opacity = '0';
-            
-            setTimeout(() => {
-                overlay.style.display = 'none';
-                document.getElementById('loveCard').style.display = 'block';
-                
-                // تشغيل الموسيقى
-                music.play().catch(e => console.log("تحتاج للموافقة على تشغيل الصوت"));
-                
-                // تشغيل أنيميشن القلوب
-                setInterval(createHeart, 300);
-            }, 1000);
-        }
-
-        function createHeart() {
-            const heart = document.createElement('div');
-            heart.classList.add('heart');
-            const icons = ['❤️', '💖', '💘', '✨', '🌸'];
-            heart.innerHTML = icons[Math.floor(Math.random() * icons.length)];
-            
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.animationDuration = Math.random() * 3 + 4 + 's';
-            heart.style.opacity = Math.random() * 0.7 + 0.3;
-            heart.style.fontSize = Math.random() * 25 + 15 + 'px';
-            
-            document.body.appendChild(heart);
-            setTimeout(() => { heart.remove(); }, 6000);
-        }
-    </script>
 </body>
 </html>
