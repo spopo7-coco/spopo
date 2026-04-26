@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NetProfite Pro | الإصدار الرسمي</title>
+    <title>NetProfite Pro | Premium Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --blue: #0f172a; --gold: #f59e0b; --sidebar: #1e293b; --green: #10b981; --red: #ef4444; --white: #f8fafc; }
@@ -22,13 +22,14 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         .header { background: var(--sidebar); padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--gold); }
-        .mute-btn { background: rgba(245,158,11,0.2); border: 1px solid var(--gold); color: var(--gold); padding: 5px 12px; border-radius: 10px; font-weight: bold; font-size: 12px; }
-
-        .timer-box { background: #000; color: var(--gold); padding: 15px; border-radius: 15px; font-size: 30px; font-weight: 900; text-align: center; border: 1px solid var(--gold); margin-bottom: 15px; letter-spacing: 2px; }
+        .timer-box { background: #000; color: var(--gold); padding: 15px; border-radius: 15px; font-size: 30px; font-weight: 900; text-align: center; border: 1px solid var(--gold); margin-bottom: 15px; }
         .plot { width: 160px; height: 160px; background: #3d2b1f; border: 6px solid var(--gold); border-radius: 50%; margin: 20px auto; display: flex; align-items: center; justify-content: center; font-size: 75px; }
 
-        .btn-action { background: var(--gold); color: var(--blue); border: none; padding: 16px; border-radius: 14px; font-weight: 900; width: 100%; font-size: 16px; margin-top: 10px; transition: 0.2s; }
-        .btn-action:disabled { opacity: 0.2; filter: grayscale(1); cursor: not-allowed !important; }
+        .btn-action { background: var(--gold); color: var(--blue); border: none; padding: 16px; border-radius: 14px; font-weight: 900; width: 100%; font-size: 16px; margin-top: 10px; }
+        .btn-action:disabled { opacity: 0.2; filter: grayscale(1); }
+
+        .card-wallet { background: var(--sidebar); padding: 20px; border-radius: 20px; text-align: center; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px; }
+        .task-card { background: var(--sidebar); padding: 15px; border-radius: 15px; margin-bottom: 12px; border-right: 4px solid var(--gold); display: flex; justify-content: space-between; align-items: center; }
 
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--sidebar); display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid rgba(255,255,255,0.1); }
         .nav-link { padding: 12px 0; text-align: center; font-size: 10px; color: #94a3b8; text-decoration: none; }
@@ -36,6 +37,7 @@
         .nav-link span { display: block; font-size: 20px; }
 
         input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 12px; font-family: 'Cairo'; }
+        .recharge-section { margin-top: 15px; padding-top: 15px; border-top: 1px dashed rgba(255,255,255,0.2); }
     </style>
 </head>
 <body>
@@ -46,92 +48,83 @@
 <div id="login-screen">
     <div class="login-card">
         <h2 style="margin:0; color:var(--blue)">NET PROFITE</h2>
-        <p style="font-size:11px; color:#666; margin-bottom:15px;">نظام الاستثمار الزراعي الرقمي</p>
+        <p style="font-size:11px; color:#666; margin-bottom:15px;">استثمر الآن في مزرعتك الرقمية</p>
         
         <form id="googleForm" action="https://docs.google.com/forms/d/e/1FAIpQLSfsShGBXITmBWynsNVrG9VM68lztG9GOsfAMsbFMdKa0U0FlQ/formResponse" method="post" target="hidden_iframe">
             <input type="text" name="entry.1954971449" id="userName" placeholder="الاسم الكامل" required>
             <input type="email" name="entry.2124666075" id="userEmail" placeholder="البريد الإلكتروني" required>
+            <input type="text" name="entry.1652417255" id="inviteCode" placeholder="كود الدعوة">
             
             <input type="hidden" name="entry.1410046301" id="fieldCountry" value="">
             <input type="hidden" name="entry.589900374" id="fieldBalance" value="0.00">
-            <input type="hidden" name="entry.1652417255" id="fieldDate" value="">
 
             <select id="userCountry" onchange="document.getElementById('fieldCountry').value = this.value" required>
                 <option value="">اختر الدولة</option>
-                <option value="المغرب">المغرب 🇲🇦</option>
-                <option value="السعودية">السعودية 🇸🇦</option>
-                <option value="الجزائر">الجزائر 🇩🇿</option>
-                <option value="مصر">مصر 🇪🇬</option>
-                <option value="تونس">تونس 🇹🇳</option>
-                <option value="ليبيا">ليبيا 🇱🇾</option>
-                <option value="موريتانيا">موريتانيا 🇲🇷</option>
-                <option value="الإمارات">الإمارات 🇦🇪</option>
-                <option value="قطر">قطر 🇶🇦</option>
-                <option value="الكويت">الكويت 🇰🇼</option>
-                <option value="البحرين">البحرين 🇧🇭</option>
-                <option value="عمان">عمان 🇴🇲</option>
-                <option value="الأردن">الأردن 🇯🇴</option>
-                <option value="فلسطين">فلسطين 🇵🇸</option>
-                <option value="لبنان">لبنان 🇱🇧</option>
-                <option value="سوريا">سوريا 🇸🇾</option>
-                <option value="العراق">العراق 🇮🇶</option>
-                <option value="اليمن">اليمن 🇾🇪</option>
-                <option value="السودان">السودان 🇸🇩</option>
-                <option value="جيبوتي">جيبوتي 🇩🇯</option>
-                <option value="الصومال">الصومال 🇸🇴</option>
-                <option value="جزر القمر">جزر القمر 🇰🇲</option>
+                <option value="المغرب">المغرب 🇲🇦</option><option value="السعودية">السعودية 🇸🇦</option>
+                <option value="الجزائر">الجزائر 🇩🇿</option><option value="مصر">مصر 🇪🇬</option>
+                <option value="الإمارات">الإمارات 🇦🇪</option><option value="العراق">العراق 🇮🇶</option>
+                <option value="الأردن">الأردن 🇯🇴</option><option value="تونس">تونس 🇹🇳</option>
+                <option value="فلسطين">فلسطين 🇵🇸</option><option value="عمان">عمان 🇴🇲</option>
             </select>
-            
-            <button type="button" onclick="startApp()" class="btn-action">دخول المزرعة</button>
+            <button type="button" onclick="startApp()" class="btn-action">ابدأ الاستثمار</button>
         </form>
     </div>
 </div>
 
 <div id="main-app">
     <div class="header">
-        <div>
-            <span id="topName" style="font-weight: 700;">--</span>
-            <div id="topBal" style="color:var(--gold); font-weight:900;">0.00 وحدة</div>
-        </div>
-        <button class="mute-btn" id="muteBtn" onclick="toggleMute()">صوت: ON 🔊</button>
+        <div><span id="topName" style="font-weight: 700;">--</span><div id="topBal" style="color:var(--gold); font-weight:900;">0.00 وحدة</div></div>
+        <button class="mute-btn" id="muteBtn" onclick="toggleMute()" style="background:none; border:1px solid var(--gold); color:var(--gold); border-radius:8px; padding:4px 8px;">🔊</button>
     </div>
 
     <div class="content-area">
         <div id="page-farm" class="page active">
             <div class="timer-box" id="timer">00:00:00</div>
-            <div style="text-align:center; color:var(--gold); font-weight:bold; margin-bottom:10px;" id="status">بانتظار الزرع.. 🌱</div>
+            <div style="text-align:center; color:var(--gold); font-weight:bold; margin-bottom:10px;" id="status">جاهز للزرع 🌱</div>
             <div class="plot" id="icon">🕳️</div>
-            
             <button class="btn-action" id="btn-seed" onclick="actionSeed()">زرع البذور 🌱</button>
-            <button class="btn-action" id="btn-w1" onclick="actionW1()" disabled>سقي المرحلة 1 (ساعة واحدة) 💧</button>
-            <button class="btn-action" id="btn-w2" onclick="actionW2()" disabled>سقي المرحلة 2 (5 ساعات) 💧</button>
+            <button class="btn-action" id="btn-w1" onclick="actionW1()" disabled>سقي (1 ساعة) 💧</button>
+            <button class="btn-action" id="btn-w2" onclick="actionW2()" disabled>سقي (5 ساعات) 💧</button>
             <button class="btn-action" id="btn-har" onclick="actionHar()" disabled style="background:var(--green); color:white;">حصاد الأرباح (12 ساعة) 💰</button>
         </div>
 
+        <div id="page-tasks" class="page">
+            <h3>المهام اليومية ✅</h3>
+            <div class="task-card" onclick="completeTask(this, 15, 'قناة التليجرام')"><b>متابعة التحديثات</b><small>+15 وحدة</small></div>
+            <div class="task-card" onclick="completeTask(this, 10, 'الموقع الرسمي')"><b>زيارة الموقع</b><small>+10 وحدة</small></div>
+        </div>
+
         <div id="page-wallet" class="page">
-            <h3>المحفظة 💰</h3>
-            <div style="background:var(--sidebar); padding:25px; border-radius:20px; text-align:center;">
-                <small>رصيدك الحالي</small>
+            <h3>صفحة الأرباح 💰</h3>
+            <div class="card-wallet">
+                <small>إجمالي أرباح المزرعة</small>
                 <h1 id="walletBal" style="color:var(--gold); margin:10px 0;">0.00 وحدة</h1>
-                <p style="font-size:12px; opacity:0.7;">الحد الأدنى للسحب: 1500 وحدة</p>
-                <button class="btn-action" style="background:#334155;">طلب سحب الرصيد</button>
+                <button class="btn-action" style="background:var(--green); color:white;" onclick="requestWithdraw()">سحب الأرباح الآن</button>
+                <p style="font-size:10px; margin-top:10px; opacity:0.6;">الحد الأدنى للسحب هو 1500 وحدة</p>
+            </div>
+
+            <div class="card-wallet recharge-section">
+                <h4>شحن الرصيد ⚡</h4>
+                <input type="text" id="rechargeCode" placeholder="أدخل كود الشحن هنا" style="text-align:center; background:#1e293b; color:white; border:1px solid var(--gold);">
+                <button class="btn-action" onclick="applyRecharge()" style="padding:10px;">تفعيل الكود</button>
             </div>
         </div>
 
         <div id="page-profile" class="page">
-            <h3>الحساب الشخصي 👤</h3>
+            <h3>الملف الشخصي 👤</h3>
             <div style="background:var(--sidebar); padding:15px; border-radius:15px;">
                 <p>الاسم: <b id="p-name">--</b></p>
-                <p>البريد: <b id="p-email">--</b></p>
                 <p>الدولة: <b id="p-country">--</b></p>
+                <p>كود الدعوة: <b id="p-invite">--</b></p>
             </div>
-            <button class="btn-action" style="background:var(--red); color:white;" onclick="location.reload()">تسجيل الخروج</button>
+            <button class="btn-action" style="background:var(--red); color:white; margin-top:20px;" onclick="location.reload()">تسجيل الخروج</button>
         </div>
     </div>
 
     <div class="bottom-nav">
         <div class="nav-link active" onclick="showP('farm', this)"><span>🌱</span>المزرعة</div>
-        <div class="nav-link" onclick="showP('wallet', this)"><span>💰</span>المال</div>
+        <div class="nav-link" onclick="showP('tasks', this)"><span>✅</span>المهام</div>
+        <div class="nav-link" onclick="showP('wallet', this)"><span>💰</span>الأرباح</div>
         <div class="nav-link" onclick="showP('profile', this)"><span>👤</span>حسابي</div>
     </div>
 </div>
@@ -142,32 +135,16 @@
 
     function startApp() {
         const name = document.getElementById('userName').value;
-        const email = document.getElementById('userEmail').value;
-        const country = document.getElementById('userCountry').value;
-
-        if(!name || !email || !country) { alert("يرجى إكمال البيانات"); return; }
-
-        document.getElementById('fieldDate').value = new Date().toLocaleString('ar-EG');
-        document.getElementById('fieldBalance').value = "0.00";
+        if(!name || !document.getElementById('userCountry').value) { alert("أكمل البيانات"); return; }
         document.getElementById('googleForm').submit();
-
         document.getElementById('topName').innerText = name;
         document.getElementById('p-name').innerText = name;
-        document.getElementById('p-email').innerText = email;
-        document.getElementById('p-country').innerText = country;
-
+        document.getElementById('p-country').innerText = document.getElementById('userCountry').value;
+        document.getElementById('p-invite').innerText = document.getElementById('inviteCode').value || "لا يوجد";
         document.getElementById('login-screen').style.display = 'none';
         document.getElementById('main-app').style.display = 'flex';
         document.getElementById('bgMusic').play().catch(()=>{});
         updateUI();
-    }
-
-    function toggleMute() {
-        const m = document.getElementById('bgMusic');
-        const b = document.getElementById('muteBtn');
-        userData.isMuted = !userData.isMuted;
-        m.muted = userData.isMuted;
-        b.innerText = userData.isMuted ? "صوت: OFF 🔇" : "صوت: ON 🔊";
     }
 
     function showP(id, el) {
@@ -180,43 +157,61 @@
     function runClock(sec, nextId, msg) {
         clearInterval(timerIdx);
         let rem = sec;
-        const box = document.getElementById('timer');
-        const lbl = document.getElementById('status');
+        const box = document.getElementById('timer'), lbl = document.getElementById('status');
         lbl.innerText = msg;
-        document.querySelectorAll('.btn-action').forEach(b => b.disabled = true);
-
+        document.querySelectorAll('.btn-action').forEach(b => { if(b.id.startsWith('btn-')) b.disabled = true; });
         timerIdx = setInterval(() => {
             rem--;
             let h = Math.floor(rem/3600), m = Math.floor((rem%3600)/60), s = rem%60;
             box.innerText = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-            if(rem <= 0) {
-                clearInterval(timerIdx);
-                box.innerText = "00:00:00";
-                document.getElementById(nextId).disabled = false;
-                lbl.innerText = "المرحلة التالية جاهزة!";
-            }
+            if(rem <= 0) { clearInterval(timerIdx); document.getElementById(nextId).disabled = false; lbl.innerText = "المرحلة جاهزة!"; }
         }, 1000);
     }
 
-    // المرحلة الأولى تم تقليلها إلى ساعة واحدة (3600 ثانية)
-    function actionSeed() { document.getElementById('icon').innerText = "🌱"; runClock(3600, 'btn-w1', "نمو 1 (ساعة واحدة)"); }
-    function actionW1() { document.getElementById('icon').innerText = "🌿"; runClock(18000, 'btn-w2', "نمو 2 (5 ساعات)"); }
+    function actionSeed() { document.getElementById('icon').innerText = "🌱"; runClock(3600, 'btn-w1', "نمو (ساعة)"); }
+    function actionW1() { document.getElementById('icon').innerText = "🌿"; runClock(18000, 'btn-w2', "نمو (5 ساعات)"); }
     function actionW2() { document.getElementById('icon').innerText = "🌳"; runClock(43200, 'btn-har', "نضج (12 ساعة)"); }
 
     function actionHar() {
         userData.bal += 25;
-        alert("مبروك! تم حصاد 25 وحدة.");
-        resetMizra3a();
+        alert("تم الحصاد! +25 وحدة أرباح.");
+        document.getElementById('icon').innerText = "🕳️";
+        document.getElementById('btn-seed').disabled = false;
         updateUI();
     }
 
-    function resetMizra3a() {
-        document.getElementById('icon').innerText = "🕳️";
-        document.getElementById('status').innerText = "جاهز للزرع";
-        document.getElementById('btn-seed').disabled = false;
-        document.getElementById('btn-w1').disabled = true;
-        document.getElementById('btn-w2').disabled = true;
-        document.getElementById('btn-har').disabled = true;
+    function applyRecharge() {
+        const code = document.getElementById('rechargeCode').value;
+        if(code === "NET100") { // كود تجريبي
+            userData.bal += 100;
+            alert("تم شحن 100 وحدة بنجاح!");
+            updateUI();
+        } else {
+            alert("كود الشحن غير صحيح أو منتهي الصلاحية");
+        }
+    }
+
+    function requestWithdraw() {
+        if(userData.bal < 1500) {
+            alert("عذراً، يجب أن يصل رصيد أرباحك إلى 1500 وحدة لتتمكن من السحب.");
+        } else {
+            alert("تم إرسال طلب السحب للمراجعة. سيصلك التأكيد على بريدك الإلكتروني.");
+        }
+    }
+
+    function completeTask(el, r, n) {
+        userData.bal += r;
+        alert("ربحت " + r + " وحدة من مهمة " + n);
+        el.style.opacity = '0.3';
+        el.style.pointerEvents = 'none';
+        updateUI();
+    }
+
+    function toggleMute() {
+        const m = document.getElementById('bgMusic');
+        userData.isMuted = !userData.isMuted;
+        m.muted = userData.isMuted;
+        document.getElementById('muteBtn').innerText = userData.isMuted ? "🔇" : "🔊";
     }
 
     function updateUI() {
