@@ -2,169 +2,210 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NetProfite Farm | المزرعة السحرية</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NetProfite Pro | المزرعة العالمية</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --land: #8d6e63; --sky: #81d4fa; --grass: #4caf50; --gold: #ffc107; }
-        body { margin: 0; font-family: 'Cairo', sans-serif; background: #222; color: #fff; overflow: hidden; }
-
-        /* شاشة التسجيل المحسنة */
-        #login-screen { 
-            background: linear-gradient(to bottom, #4facfe 0%, #00f2fe 100%);
-            height: 100vh; display: flex; align-items: center; justify-content: center;
-            position: fixed; width: 100%; z-index: 9999;
+        :root { --blue: #0f172a; --gold: #f59e0b; --green: #10b981; --sidebar: #1e293b; }
+        
+        body { 
+            background: var(--blue); color: #fff; font-family: 'Cairo', sans-serif; 
+            margin: 0; padding: 0; overflow: hidden; touch-action: manipulation;
         }
-        .login-card { background: white; padding: 30px; border-radius: 25px; width: 340px; text-align: center; color: #333; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
-        select, input { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #eee; border-radius: 12px; font-weight: bold; }
+
+        /* شاشة التسجيل */
+        #login-screen { 
+            background: radial-gradient(circle, #1e293b 0%, #0f172a 100%); 
+            height: 100vh; width: 100%; display: flex; align-items: center; justify-content: center; 
+            position: fixed; top: 0; left: 0; z-index: 9999; 
+        }
+        .login-card { 
+            background: rgba(255,255,255,0.05); backdrop-filter: blur(15px); 
+            padding: 25px; border-radius: 20px; width: 85%; max-width: 400px; 
+            text-align: center; border: 1px solid rgba(255,255,255,0.1); 
+        }
 
         /* واجهة اللعبة */
-        #main-app { display: none; height: 100vh; display: flex; flex-direction: column; background: var(--sky); }
-        
-        .header { background: rgba(0,0,0,0.2); padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; }
-        .balance-tag { background: var(--gold); color: #000; padding: 5px 15px; border-radius: 20px; font-weight: 900; box-shadow: 0 4px 0 #b7950b; }
+        #main-app { display: none; flex-direction: column; height: 100vh; width: 100%; }
 
-        /* المزرعة التفاعلية */
-        .farm-view { flex-grow: 1; position: relative; overflow: hidden; background: linear-gradient(to bottom, #81d4fa 0%, #e1f5fe 100%); }
-        .ground { position: absolute; bottom: 0; width: 100%; height: 30%; background: var(--land); border-top: 10px solid var(--grass); }
-        
-        /* النبتة المتحركة */
-        .plant-container { position: absolute; bottom: 25%; left: 50%; transform: translateX(-50%); text-align: center; }
-        .plant-img { width: 120px; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform-origin: bottom; }
-        .wobble { animation: wobble 2s infinite; }
-        @keyframes wobble { 0%, 100% { transform: rotate(-2deg); } 50% { transform: rotate(2deg); } }
+        .top-bar { 
+            background: var(--sidebar); padding: 10px; display: flex; 
+            justify-content: space-around; align-items: center; border-bottom: 2px solid var(--gold);
+        }
+        .stat-box { text-align: center; }
+        .stat-box b { color: var(--gold); font-size: 16px; }
 
-        /* أزرار الأكشن السفلية */
-        .actions { background: #fff; padding: 20px; display: flex; justify-content: space-around; border-radius: 30px 30px 0 0; }
-        .action-btn { width: 70px; height: 70px; border-radius: 50%; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 24px; transition: 0.2s; box-shadow: 0 5px 0 #ccc; }
-        .action-btn:active { transform: translateY(5px); box-shadow: none; }
-        .btn-seed { background: #8d6e63; color: white; }
-        .btn-water { background: #03a9f4; color: white; }
-        .btn-harvest { background: #4caf50; color: white; }
-        .btn-locked { background: #eee; color: #aaa; cursor: not-allowed; box-shadow: none; }
+        /* أيقونة كتم الصوت العائمة */
+        .mute-btn {
+            position: absolute; top: 70px; left: 20px; z-index: 100;
+            background: rgba(255,255,255,0.1); border: 1px solid var(--gold);
+            width: 40px; height: 40px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 20px;
+        }
 
-        /* تأثيرات الربح */
-        .coin-popup { position: absolute; color: var(--gold); font-weight: 900; font-size: 24px; animation: floatUp 1s forwards; pointer-events: none; }
-        @keyframes floatUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-100px); } }
+        .farm-area { 
+            flex-grow: 1; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; position: relative;
+        }
+        .plot {
+            width: 180px; height: 180px; background: rgba(255,255,255,0.02);
+            border: 3px dashed var(--gold); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .plant-img { width: 100px; transition: 0.4s; }
 
-        #timer-text { font-weight: 900; color: #fff; text-shadow: 2px 2px 5px rgba(0,0,0,0.3); font-size: 20px; }
+        /* التحكم السفلي */
+        .controls {
+            background: var(--sidebar); padding: 15px;
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+            border-radius: 20px 20px 0 0;
+        }
+        .btn {
+            background: rgba(255,255,255,0.05); padding: 15px 5px; border-radius: 12px;
+            text-align: center; font-size: 12px; cursor: pointer; border: 1px solid transparent;
+        }
+        .btn.active { background: var(--gold); color: var(--blue); font-weight: bold; }
+        .btn.disabled { opacity: 0.3; pointer-events: none; }
+
+        /* المدخلات */
+        input, select { 
+            width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; 
+            border: none; background: #fff; color: #333; font-weight: bold; font-family: 'Cairo';
+        }
+        .submit-btn {
+            background: var(--gold); color: var(--blue); border: none; 
+            padding: 15px; width: 100%; border-radius: 10px; font-weight: 900; cursor: pointer;
+        }
+
+        .modal { 
+            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+            background: white; color: #333; padding: 20px; border-radius: 15px; width: 80%; z-index: 10000;
+        }
     </style>
 </head>
 <body>
 
-<audio id="sound-water"><source src="https://www.myinstants.com/media/sounds/water-pour.mp3" type="audio/mpeg"></audio>
-<audio id="sound-coin"><source src="https://www.myinstants.com/media/sounds/coin-collect.mp3" type="audio/mpeg"></audio>
-<audio id="bg-music" loop><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mpeg"></audio>
+<audio id="gameMusic" loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3" type="audio/mpeg">
+</audio>
 
 <div id="login-screen">
     <div class="login-card">
-        <h1 style="margin:0; color:#2ecc71;">NetProfite 🌾</h1>
-        <p>المزرعة التي تجعلك ثرياً</p>
-        <form onsubmit="event.preventDefault(); startApp();">
-            <input type="text" id="p_name" placeholder="اسمك الكامل" required>
-            <input type="email" placeholder="بريدك الإلكتروني" required>
-            <select id="p_country">
+        <h1 style="color:var(--gold); margin:0;">Net<span>Profite</span></h1>
+        <p style="font-size:13px; opacity:0.8;">المزرعة العربية الكبرى 🌍</p>
+        <form onsubmit="return startApp(event)">
+            <input type="text" id="u_name" placeholder="الاسم الكامل" required>
+            <input type="email" placeholder="البريد الإلكتروني" required>
+            <select id="country-select">
                 <option value="MA" data-curr="MAD">المغرب 🇲🇦</option>
                 <option value="SA" data-curr="SAR">السعودية 🇸🇦</option>
                 <option value="EG" data-curr="EGP">مصر 🇪🇬</option>
                 <option value="DZ" data-curr="DZD">الجزائر 🇩🇿</option>
+                <option value="AE" data-curr="AED">الإمارات 🇦🇪</option>
+                <option value="KW" data-curr="KWD">الكويت 🇰🇼</option>
+                <option value="QA" data-curr="QAR">قطر 🇶🇦</option>
+                <option value="OM" data-curr="OMR">عمان 🇴🇲</option>
+                <option value="BH" data-curr="BHD">البحرين 🇧🇭</option>
+                <option value="JO" data-curr="JOD">الأردن 🇯🇴</option>
+                <option value="IQ" data-curr="IQD">العراق 🇮🇶</option>
+                <option value="LY" data-curr="LYD">ليبيا 🇱🇾</option>
+                <option value="SD" data-curr="SDG">السودان 🇸🇩</option>
+                <option value="LB" data-curr="LBP">لبنان 🇱🇧</option>
+                <option value="PS" data-curr="USD">فلسطين 🇵🇸</option>
+                <option value="SY" data-curr="SYP">سوريا 🇸🇾</option>
+                <option value="YE" data-curr="YER">اليمن 🇾🇪</option>
+                <option value="TN" data-curr="TND">تونس 🇹🇳</option>
+                <option value="MR" data-curr="MRU">موريتانيا 🇲🇷</option>
+                <option value="SO" data-curr="SOS">الصومال 🇸🇴</option>
+                <option value="DJ" data-curr="DJF">جيبوتي 🇩🇯</option>
+                <option value="KM" data-curr="KMF">جزر القمر 🇰🇲</option>
             </select>
-            <button style="background:#4caf50; color:white; border:none; padding:15px; width:100%; border-radius:12px; font-weight:900; margin-top:10px; cursor:pointer;">تسجيل وابدأ الزرع</button>
+            <button type="submit" class="submit-btn">تسجيل الدخول للمزرعة</button>
         </form>
     </div>
 </div>
 
 <div id="main-app">
-    <div class="header">
-        <div id="timer-text">جاهز للزرع 🚜</div>
-        <div class="balance-tag"><span id="balance">0.00</span> <span id="curr-sym">MAD</span></div>
+    <div class="mute-btn" onclick="toggleMute()" id="mute-icon">🔊</div>
+
+    <div class="top-bar">
+        <div class="stat-box"><small>الرصيد</small><br><b id="balance">0.00</b> <span id="curr-sym"></span></div>
+        <div class="stat-box"><small>كود الإحالة</small><br><b id="ref-code">--</b></div>
     </div>
 
-    <div class="farm-view">
-        <div class="plant-container">
+    <div class="farm-area">
+        <div id="status-text" style="margin-bottom:20px; font-weight:bold; color:var(--gold)">ابدأ بزراعة أول محصول 🌱</div>
+        <div class="plot">
             <img id="plant-img" class="plant-img" src="https://cdn-icons-png.flaticon.com/512/628/628283.png" style="display:none">
-            <div id="growth-per" style="font-weight:900; color:#2e7d32"></div>
         </div>
-        <div class="ground"></div>
     </div>
 
-    <div class="actions">
-        <div style="text-align:center"><button id="btn-seed" class="action-btn btn-seed" onclick="plant()">🌱</button><small style="color:#333">زرع</small></div>
-        <div style="text-align:center"><button id="btn-water" class="action-btn btn-locked" onclick="water()">💧</button><small style="color:#333">سقي</small></div>
-        <div style="text-align:center"><button id="btn-harvest" class="action-btn btn-locked" onclick="harvest()">💰</button><small style="color:#333">حصاد</small></div>
+    <div class="controls">
+        <div id="btn-plant" class="btn active" onclick="goPlant()">🌱<br>زرع</div>
+        <div id="btn-water" class="btn disabled" onclick="goWater()">💧<br>سقي</div>
+        <div id="btn-harvest" class="btn disabled" onclick="goHarvest()">💰<br>حصاد</div>
+    </div>
+    
+    <div style="text-align:center; padding:10px; font-size:12px; background:#0f172a; color:var(--gold);" onclick="showWithdraw()">
+        سحب الأرباح 🏦
     </div>
 </div>
 
-<script>
-    let stage = 0; 
-    let money = 0;
-    let currency = "MAD";
+<div id="withdraw-modal" class="modal">
+    <h3>تفعيل السحب</h3>
+    <p style="font-size:12px">أرسل 10 USDT لعنوان BNB Smart Chain لتنشيط حسابك:</p>
+    <div style="background:#eee; padding:10px; font-size:10px; word-break:break-all;">0xC2B94b090B0c781596c47d0E899b4F527E8977D2</div>
+    <button onclick="document.getElementById('withdraw-modal').style.display='none'" class="submit-btn" style="margin-top:10px">إغلاق</button>
+</div>
 
-    function startApp() {
-        const sel = document.getElementById('p_country');
-        currency = sel.options[sel.selectedIndex].getAttribute('data-curr');
+<script>
+    let stage = 0;
+    let balance = 0;
+    const music = document.getElementById('gameMusic');
+    let isMuted = false;
+
+    function startApp(e) {
+        e.preventDefault();
+        const sel = document.getElementById('country-select');
+        const currency = sel.options[sel.selectedIndex].getAttribute('data-curr');
+        
         document.getElementById('curr-sym').innerText = currency;
+        document.getElementById('ref-code').innerText = "NP-" + sel.value + "-" + Math.floor(1000 + Math.random()*9000);
+        
         document.getElementById('login-screen').style.display = 'none';
         document.getElementById('main-app').style.display = 'flex';
-        document.getElementById('bg-music').play().catch(()=>{});
+
+        // تشغيل الموسيقى عند الدخول
+        music.play().catch(() => {
+            console.log("التفاعل مطلوب لتشغيل الصوت");
+        });
+        
+        return false;
     }
 
-    function plant() {
+    function toggleMute() {
+        isMuted = !isMuted;
+        music.muted = isMuted;
+        document.getElementById('mute-icon').innerText = isMuted ? "🔇" : "🔊";
+    }
+
+    function goPlant() {
         if(stage !== 0) return;
         stage = 1;
-        document.getElementById('sound-water').play();
         const img = document.getElementById('plant-img');
-        img.src = "https://cdn-icons-png.flaticon.com/512/628/628283.png"; // بذرة
+        img.src = "https://cdn-icons-png.flaticon.com/512/628/628283.png";
         img.style.display = "block";
-        img.style.transform = "scale(0.5)";
-        
-        updateStatus("البذرة تنمو... سقي بعد 3 ساعات", "btn-water", "btn-seed");
-        startTimer(10); // محاكاة لـ 10 ثواني للتجربة (غيرها لـ 10800 للواقعية)
+        updateUI("المحصول ينمو.. السقي بعد 3 ساعات", "btn-water", "btn-plant");
     }
 
-    function water() {
+    function goWater() {
         if(stage === 1) {
             stage = 2;
-            document.getElementById('sound-water').play();
             const img = document.getElementById('plant-img');
-            img.src = "https://cdn-icons-png.flaticon.com/512/892/892926.png"; // نبتة صغيرة
-            img.style.transform = "scale(0.8)";
-            img.classList.add('wobble');
-            updateStatus("النبتة تكبر! حصاد بعد 24 ساعة", "btn-harvest", "btn-water");
+            img.src = "https://cdn-icons-png.flaticon.com/512/892/892926.png";
+            updateUI("المحصول نضج! الحصاد بعد 24 ساعة", "btn-harvest", "btn-water");
         }
     }
 
-    function harvest() {
-        if(stage === 2) {
-            document.getElementById('sound-coin').play();
-            showCoinPopup();
-            money += 250;
-            document.getElementById('balance').innerText = money.toFixed(2);
-            alert("تم الحصاد بنجاح! ربحت " + 250 + " " + currency);
-            reset();
-        }
-    }
-
-    function updateStatus(txt, toEnable, toDisable) {
-        document.getElementById('timer-text').innerText = txt;
-        document.getElementById(toEnable).className = "action-btn " + toEnable.replace('btn-','btn-');
-        document.getElementById(toDisable).className = "action-btn btn-locked";
-    }
-
-    function reset() {
-        stage = 0;
-        document.getElementById('plant-img').style.display = "none";
-        document.getElementById('plant-img').classList.remove('wobble');
-        updateStatus("جاهز للزرع 🚜", "btn-seed", "btn-harvest");
-    }
-
-    function showCoinPopup() {
-        const p = document.createElement('div');
-        p.className = 'coin-popup';
-        p.innerText = "+250 " + currency;
-        p.style.left = "50%"; p.style.top = "50%";
-        document.body.appendChild(p);
-        setTimeout(() => p.remove(), 1000);
-    }
-
-    function startTimer(sec
+    function goHarvest() {
