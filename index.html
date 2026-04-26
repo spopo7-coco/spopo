@@ -3,38 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NetProfite Pro | Real-Time Engine</title>
+    <title>NetProfite Ultimate | النظام المعتمد</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --blue: #0f172a; --gold: #f59e0b; --sidebar: #1e293b; --green: #10b981; --red: #ef4444; }
-        * { box-sizing: border-box; -webkit-user-select: none; user-select: none; }
+        * { box-sizing: border-box; -webkit-user-select: none; user-select: none; outline: none; }
         body { background: var(--blue); color: #fff; font-family: 'Cairo', sans-serif; margin: 0; overflow: hidden; height: 100vh; }
         
-        button, .nav-link, .card, select { cursor: pointer !important; }
+        /* تحسين استجابة الماوس */
+        button, .nav-link, .log-item, select { cursor: pointer !important; }
         input { cursor: text !important; user-select: text !important; }
 
         #login-screen { background: radial-gradient(circle, #1e293b, #0f172a); height: 100vh; width: 100%; display: flex; align-items: center; justify-content: center; position: fixed; z-index: 9999; }
-        .login-card { background: white; padding: 25px; border-radius: 20px; width: 90%; max-width: 380px; text-align: center; color: #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .login-card { background: white; padding: 25px; border-radius: 20px; width: 90%; max-width: 380px; text-align: center; color: #333; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
 
         #main-app { display: none; flex-direction: column; height: 100vh; }
         .content { flex-grow: 1; overflow-y: auto; padding: 20px; padding-bottom: 90px; }
-        .page { display: none; animation: fadeIn 0.4s; } .active { display: block; }
+        .page { display: none; animation: fadeIn 0.4s forwards; } .active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .header { background: var(--sidebar); padding: 15px; display: flex; justify-content: space-between; border-bottom: 2px solid var(--gold); }
-        .timer-display { background: #000; color: var(--gold); padding: 12px; border-radius: 12px; font-size: 26px; font-weight: 900; text-align: center; border: 1px solid var(--gold); margin-bottom: 10px; box-shadow: inset 0 0 10px rgba(245,158,11,0.2); }
+        .header { background: var(--sidebar); padding: 15px; display: flex; justify-content: space-between; border-bottom: 2px solid var(--gold); position: sticky; top: 0; z-index: 10; }
+        .timer-display { background: #000; color: var(--gold); padding: 15px; border-radius: 15px; font-size: 28px; font-weight: 900; text-align: center; border: 1px solid var(--gold); margin-bottom: 10px; box-shadow: inset 0 0 15px rgba(245,158,11,0.2); letter-spacing: 2px; }
         
-        .plot { width: 160px; height: 160px; background: #3d2b1f; border-radius: 50%; margin: 15px auto; display: flex; align-items: center; justify-content: center; font-size: 70px; border: 5px solid var(--gold); }
+        .plot { width: 170px; height: 170px; background: #3d2b1f; border-radius: 50%; margin: 15px auto; display: flex; align-items: center; justify-content: center; font-size: 80px; border: 6px solid var(--gold); box-shadow: 0 5px 25px rgba(0,0,0,0.4); }
 
-        .btn-main { background: var(--gold); color: var(--blue); border: none; padding: 16px; border-radius: 14px; font-weight: 900; width: 100%; margin-top: 10px; transition: 0.2s; }
-        .btn-main:disabled { opacity: 0.25; cursor: not-allowed !important; filter: grayscale(1); }
+        .btn-main { background: var(--gold); color: var(--blue); border: none; padding: 16px; border-radius: 14px; font-weight: 900; width: 100%; margin-top: 10px; transition: 0.2s; font-size: 16px; }
+        .btn-main:disabled { opacity: 0.2; cursor: not-allowed !important; filter: grayscale(1); }
 
-        .log-item { background: var(--sidebar); padding: 12px; border-radius: 10px; margin-bottom: 8px; font-size: 13px; border-right: 4px solid var(--gold); }
+        .log-item { background: var(--sidebar); padding: 15px; border-radius: 12px; margin-bottom: 10px; font-size: 13px; border-right: 4px solid var(--gold); transition: 0.3s; }
+        .log-item:active { transform: scale(0.98); }
+
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--sidebar); display: grid; grid-template-columns: repeat(5, 1fr); border-top: 1px solid #334155; }
-        .nav-link { padding: 14px 0; text-align: center; font-size: 10px; color: #94a3b8; }
+        .nav-link { padding: 14px 0; text-align: center; font-size: 10px; color: #94a3b8; text-decoration: none; }
         .nav-link.active { color: var(--gold); background: rgba(245,158,11,0.05); }
+        .nav-link span { display: block; font-size: 22px; margin-bottom: 2px; }
         
-        input, select { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #ccc; font-family: 'Cairo'; }
+        input, select { width: 100%; padding: 12px; margin: 8px 0; border-radius: 12px; border: 1px solid #ccc; font-family: 'Cairo'; outline: none; }
     </style>
 </head>
 <body>
@@ -45,17 +49,17 @@
 
 <div id="login-screen">
     <div class="login-card">
-        <h2 style="margin-top:0;">NET PROFITE</h2>
-        <p style="font-size:12px; color:#666;">سجل بياناتك للبدء في جني الأرباح</p>
+        <h2 style="margin-top:0; color:var(--blue);">NET PROFITE</h2>
+        <p style="font-size:12px; color:#666; margin-bottom:15px;">نظام الزراعة الرقمية - سجل للبدء</p>
         
-        <form action="https://docs.google.com/forms/u/0/d/e/YOUR_FORM_ID/formResponse" method="post" target="hidden_iframe" onsubmit="return startApp(event)">
-            <input type="text" name="entry.123456" id="uName" placeholder="الاسم الكامل" required>
-            <input type="email" name="entry.789012" id="uEmail" placeholder="البريد الإلكتروني" required>
+        <form action="https://docs.google.com/forms/u/0/d/e/1FAIpQLSdfu9v_MizW2VpYhW3e8r_X9I7v9E6Zq4vP6YI0ZpI7A8G7_Q/formResponse" method="post" target="hidden_iframe" onsubmit="return startApp(event)">
+            <input type="text" name="entry.2005620554" id="uName" placeholder="الاسم الكامل" required>
+            <input type="email" name="entry.1045791291" id="uEmail" placeholder="البريد الإلكتروني" required>
             <select id="uCountry">
                 <option value="MA" data-curr="MAD">المغرب 🇲🇦</option>
                 <option value="SA" data-curr="SAR">السعودية 🇸🇦</option>
-                <option value="EG" data-curr="EGP">مصر 🇪🇬</option>
                 <option value="DZ" data-curr="DZD">الجزائر 🇩🇿</option>
+                <option value="EG" data-curr="EGP">مصر 🇪🇬</option>
                 <option value="IQ" data-curr="IQD">العراق 🇮🇶</option>
                 <option value="AE" data-curr="AED">الإمارات 🇦🇪</option>
             </select>
@@ -73,41 +77,45 @@
     <div class="content">
         <div id="p-farm" class="page active">
             <div class="timer-display" id="mainTimer">00:00:00</div>
-            <div style="text-align:center; color:var(--gold); font-weight:bold; margin-bottom:10px;" id="statusText">بانتظار الزرع..</div>
+            <div style="text-align:center; color:var(--gold); font-weight:bold; margin-bottom:10px;" id="statusText">جاهز لبدء الموسم 🌱</div>
             <div class="plot" id="plotIcon">🕳️</div>
             
             <button class="btn-main" id="btnSeed" onclick="doSeed()">زرع البذور 🌱</button>
-            <button class="btn-main" id="btnWater1" onclick="doWater1()" disabled>سقي المرحلة الأولى 💧</button>
-            <button class="btn-main" id="btnWater2" onclick="doWater2()" disabled>سقي المرحلة الثانية 💧</button>
-            <button class="btn-main" id="btnHarvest" onclick="doHarvest()" disabled style="background:var(--green); color:white;">حصاد الأرباح 💰</button>
+            <button class="btn-main" id="btnWater1" onclick="doWater1()" disabled>سقي المرحلة الأولى (3 ساعات) 💧</button>
+            <button class="btn-main" id="btnWater2" onclick="doWater2()" disabled>سقي المرحلة الثانية (5 ساعات) 💧</button>
+            <button class="btn-main" id="btnHarvest" onclick="doHarvest()" disabled style="background:var(--green); color:white;">حصاد الربح (12 ساعة انتظار) 💰</button>
         </div>
 
         <div id="p-tasks" class="page">
-            <h3>المهام المتاحة</h3>
-            <div class="log-item" onclick="completeTask(this, 10)">متابعة حساب تليجرام الرسمي <span style="float:left; color:var(--gold)">+10</span></div>
-            <div class="log-item" onclick="completeTask(this, 5)">زيارة المتجر اليومية <span style="float:left; color:var(--gold)">+5</span></div>
+            <h3>المهام اليومية ✅</h3>
+            <div class="log-item" onclick="completeTask(this, 10, 'متابعة تليجرام')">
+                <b>متابعة قناة التحديثات</b><br><small>+10 وحدات</small>
+            </div>
+            <div class="log-item" onclick="completeTask(this, 5, 'زيارة المتجر')">
+                <b>زيارة متجر الشركاء</b><br><small>+5 وحدات</small>
+            </div>
         </div>
 
         <div id="p-dash" class="page">
-            <h3>سجل الردود والعمليات</h3>
+            <h3>سجل الردود والعمليات 📊</h3>
             <div id="logsContainer"></div>
         </div>
 
         <div id="p-pay" class="page">
-            <h3>المحفظة</h3>
-            <div style="background:var(--sidebar); padding:20px; border-radius:15px; text-align:center; border:1px solid #444;">
-                <small>إجمالي الأرباح</small>
-                <h2 id="payBal" style="color:var(--gold); font-size:32px;">0.00</h2>
-                <p style="font-size:11px; opacity:0.6;">الحد الأدنى لطلب السحب هو 1500 وحدة</p>
-                <button class="btn-main" style="background:#334155; color:#fff" onclick="alert('رصيدك لا يسمح بالسحب حالياً')">سحب الرصيد</button>
+            <h3>المحفظة والسحب 💰</h3>
+            <div style="background:var(--sidebar); padding:25px; border-radius:20px; text-align:center; border:1px solid #444;">
+                <small>رصيدك القابل للسحب</small>
+                <h2 id="payBal" style="color:var(--gold); font-size:36px; margin:10px 0;">0.00</h2>
+                <p style="font-size:11px; opacity:0.6;">الحد الأدنى للسحب: 1500 وحدة</p>
+                <button class="btn-main" style="background:#334155;" onclick="alert('يجب الوصول للحد الأدنى أولاً')">طلب سحب</button>
             </div>
         </div>
 
         <div id="p-profile" class="page">
-            <h3>الملف الشخصي</h3>
-            <div class="log-item">المستخدم: <b id="pName"></b></div>
+            <h3>الملف الشخصي 👤</h3>
+            <div class="log-item">الاسم: <b id="pName"></b></div>
             <div class="log-item">البريد: <b id="pEmail"></b></div>
-            <div class="log-item">حالة الحساب: <b style="color:var(--green)">موثق ✅</b></div>
+            <div class="log-item">حالة الحساب: <b style="color:var(--green)">نشط وموثق ✅</b></div>
             <button class="btn-main" style="background:var(--red); color:white;" onclick="location.reload()">تسجيل الخروج</button>
         </div>
     </div>
@@ -126,7 +134,6 @@
     let timerInt;
 
     function startApp(e) {
-        // لا نمنع الإرسال لكي تصل البيانات لـ Google Form عبر iframe
         const s = document.getElementById('uCountry');
         user.curr = s.options[s.selectedIndex].getAttribute('data-curr');
         document.getElementById('topName').innerText = document.getElementById('uName').value;
@@ -136,11 +143,11 @@
         setTimeout(() => {
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('main-app').style.display = 'flex';
-            document.getElementById('bgMusic').play();
-            addLog("تسجيل جديد بالنظام", 0);
+            document.getElementById('bgMusic').play().catch(()=>{});
+            addLog("تسجيل الدخول وإرسال البيانات", 0);
             updateUI();
-        }, 1000); // تأخير بسيط لضمان إرسال النموذج
-        return true;
+        }, 800);
+        return true; 
     }
 
     function nav(id, el) {
@@ -150,27 +157,27 @@
         el.classList.add('active');
     }
 
-    // محرك الوقت الصارم
-    function runTimer(seconds, nextActionBtnId) {
+    function runTimer(seconds, nextBtnId) {
         clearInterval(timerInt);
         let remaining = seconds;
         const display = document.getElementById('mainTimer');
         
-        // قفل جميع الأزرار
-        document.querySelectorAll('.btn-main').forEach(b => { if(b.id !== 'login-btn') b.disabled = true; });
+        // قفل الأزرار أثناء العمل
+        document.getElementById('btnSeed').disabled = true;
+        document.getElementById('btnWater1').disabled = true;
+        document.getElementById('btnWater2').disabled = true;
+        document.getElementById('btnHarvest').disabled = true;
 
         timerInt = setInterval(() => {
             remaining--;
-            let h = Math.floor(remaining / 3600);
-            let m = Math.floor((remaining % 3600) / 60);
-            let s = remaining % 60;
+            let h = Math.floor(remaining / 3600), m = Math.floor((remaining % 3600) / 60), s = remaining % 60;
             display.innerText = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
 
             if (remaining <= 0) {
                 clearInterval(timerInt);
                 display.innerText = "00:00:00";
-                document.getElementById(nextActionBtnId).disabled = false;
-                document.getElementById('statusText').innerText = "قم بالأكشن التالي الآن!";
+                document.getElementById(nextBtnId).disabled = false;
+                document.getElementById('statusText').innerText = "المحصول جاهز للأكشن التالي!";
             }
         }, 1000);
     }
@@ -178,59 +185,10 @@
     function doSeed() {
         document.getElementById('plotIcon').innerText = "🌱";
         document.getElementById('statusText').innerText = "مرحلة النمو الأولى (3 ساعات)";
-        runTimer(10800, 'btnWater1'); // 3 ساعات
+        runTimer(10800, 'btnWater1'); 
     }
 
     function doWater1() {
         document.getElementById('plotIcon').innerText = "🌿";
         document.getElementById('statusText').innerText = "مرحلة النمو الثانية (5 ساعات)";
-        runTimer(18000, 'btnWater2'); // 5 ساعات
-    }
-
-    function doWater2() {
-        document.getElementById('plotIcon').innerText = "🌳";
-        document.getElementById('statusText').innerText = "مرحلة النضج النهائية (12 ساعة)";
-        runTimer(43200, 'btnHarvest'); // 12 ساعة
-    }
-
-    function doHarvest() {
-        user.bal += 25;
-        addLog("حصاد محصول ناضج", 25);
-        alert("مبروك! تم حصاد 25 وحدة بنجاح.");
-        resetFarm();
-        updateUI();
-    }
-
-    function resetFarm() {
-        document.getElementById('plotIcon').innerText = "🕳️";
-        document.getElementById('statusText').innerText = "المزرعة جاهزة لزراعة جديدة";
-        document.getElementById('btnSeed').disabled = false;
-        document.getElementById('btnWater1').disabled = true;
-        document.getElementById('btnWater2').disabled = true;
-        document.getElementById('btnHarvest').disabled = true;
-        document.getElementById('mainTimer').innerText = "00:00:00";
-    }
-
-    function completeTask(el, r) {
-        user.bal += r;
-        addLog("إكمال مهمة", r);
-        el.style.opacity = '0.3';
-        el.style.pointerEvents = 'none';
-        updateUI();
-    }
-
-    function addLog(type, val) {
-        const div = document.createElement('div');
-        div.className = 'log-item';
-        div.innerHTML = `${type} <span style="float:left; color:var(--green)">+${val}</span>`;
-        document.getElementById('logsContainer').prepend(div);
-    }
-
-    function updateUI() {
-        const v = user.bal.toFixed(2) + " " + user.curr;
-        document.getElementById('topBal').innerText = v;
-        document.getElementById('payBal').innerText = v;
-    }
-</script>
-</body>
-</html>
+        runTimer(180
